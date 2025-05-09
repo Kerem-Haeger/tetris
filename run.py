@@ -10,13 +10,12 @@ import copy
 # Constants
 BOARD_WIDTH = 10
 BOARD_HEIGHT = 20
-EMPTY = "  "  # Two spaces to match emoji width
+EMPTY = "  "
 TICK_RATE = 0.5
 
 console = Console()
 term = Terminal()
 
-# Tetromino shapes (logic)
 TETROMINOES = {
     "I": [
         [1, 1, 1, 1]
@@ -49,7 +48,7 @@ TETROMINOES = {
         ]
 }
 
-# Emoji to represent each tetromino visually
+
 TETROMINO_EMOJIS = ["🟥", "🟦", "🟨", "🟩", "🟪", "🟧"]
 
 
@@ -93,7 +92,6 @@ class Piece:
                             board[board_r][board_c] != EMPTY):
                         return  # Invalid rotation, so cancel
 
-        # Apply rotation
         self.shape = rotated
 
 
@@ -195,6 +193,9 @@ def clear_lines(board, live):
 def main():
     board = create_board()
     score = 0
+    level = 1
+    lines_total = 0
+    tick_rate = 0.5
     current_piece = new_random_piece()
     next_piece = new_random_piece()
 
@@ -202,7 +203,7 @@ def main():
         console=console, refresh_per_second=10, screen=True
                             ) as live:
         while True:
-            key = term.inkey(timeout=TICK_RATE)
+            key = term.inkey(timeout=tick_rate)
 
             # handle key presses
             if key.name == "KEY_LEFT":
@@ -233,6 +234,13 @@ def main():
 
                 board, lines = clear_lines(board, live)
                 score += lines * 100
+                lines_total += lines
+
+                # Every 10 lines, level up
+                if lines_total >= level * 10:
+                    level += 1
+
+                tick_rate = max(0.1, 0.5 - (level - 1) * 0.05)
 
                 current_piece = next_piece
                 next_piece = new_random_piece()
@@ -254,5 +262,4 @@ def main():
             live.update(Columns([game_panel] + side_panels))
 
 
-if __name__ == "__main__":
-    main()
+main()
