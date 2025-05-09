@@ -51,8 +51,8 @@ IS_HEROKU = os.getenv("DYNO") is not None
 
 TETROMINO_EMOJIS = (
     ["🟥", "🟦", "🟨", "🟩", "🟪", "🟧"] if not IS_HEROKU else
-    ["[red]░░[/red]", "[blue]░░[/blue]", "[yellow]░░[/yellow]",
-        "[green]░░[/green]", "[magenta]░░[/magenta]", "[cyan]░░[/cyan]"]
+    ["[red]▓▓[/red]", "[blue]▓▓[/blue]", "[yellow]▓▓[/yellow]",
+        "[green]▓▓[/green]", "[magenta]▓▓[/magenta]", "[cyan]▓▓[/cyan]"]
 )
 
 console = Console()
