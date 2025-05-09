@@ -163,7 +163,7 @@ def render_controls_panel():
     return Panel(controls_text, title="CONTROLS", width=20)
 
 
-def clear_lines(board, live, score, next_piece):
+def clear_lines(board, live, score, next_piece, high_scores_text):
     """
     Animates and clears full lines with a wiping effect.
     Returns the updated board and number of lines cleared.
@@ -171,7 +171,6 @@ def clear_lines(board, live, score, next_piece):
     next_panel = render_next_panel(next_piece)
     score_panel = render_score_panel(score)
     controls_panel = render_controls_panel()
-    high_scores_text = get_high_scores()
     high_scores_panel = Panel(high_scores_text, title="LEADERBOARD", width=24)
 
     full_rows = [
@@ -232,6 +231,8 @@ def main():
         next_piece = new_random_piece()
         restart_requested = False
 
+        high_scores_text = get_high_scores()
+
         with term.cbreak(), Live(
                                 console=console,
                                 refresh_per_second=10
@@ -266,7 +267,13 @@ def main():
                     lock_piece(current_piece, board)
                     score += 10
 
-                    board, lines = clear_lines(board, live, score, next_piece)
+                    board, lines = clear_lines(
+                        board,
+                        live,
+                        score,
+                        next_piece,
+                        high_scores_text
+                        )
                     score += lines * 100
                     lines_total += lines
 
@@ -308,6 +315,11 @@ Press [green]R[/green] to restart or [cyan]Q[/cyan] to quit.
                 next_panel = render_next_panel(next_piece)
                 score_panel = render_score_panel(score)
                 controls_panel = render_controls_panel()
+                high_scores_panel = Panel(
+                                        high_scores_text,
+                                        title="LEADERBOARD",
+                                        width=24
+                                        )
                 game_panel = Panel(
                     render_board(temp_board),
                     title="TETRIS",
@@ -317,7 +329,8 @@ Press [green]R[/green] to restart or [cyan]Q[/cyan] to quit.
                 layout = Layout()
                 layout.split_row(
                     Layout(game_panel, name="game", size=24),
-                    Layout(name="sidebar")
+                    Layout(name="sidebar", size=28),
+                    Layout(name="leaderboard")
                 )
 
                 layout["sidebar"].split_column(
@@ -325,6 +338,8 @@ Press [green]R[/green] to restart or [cyan]Q[/cyan] to quit.
                     Layout(score_panel),
                     Layout(controls_panel)
                 )
+
+                layout["leaderboard"].update(high_scores_panel)
 
                 live.update(Panel(
                     layout,
@@ -335,6 +350,7 @@ Press [green]R[/green] to restart or [cyan]Q[/cyan] to quit.
 
         if restart_requested:
             console.clear()
+            high_scores_text = get_high_scores()
             continue  # Restart outer loop
         else:
             break  # Quit the game
