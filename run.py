@@ -6,6 +6,7 @@ from blessed import Terminal
 import time
 import random
 import copy
+from highscores import get_high_scores, submit_score
 
 # Constants
 BOARD_WIDTH = 10
@@ -170,6 +171,8 @@ def clear_lines(board, live, score, next_piece):
     next_panel = render_next_panel(next_piece)
     score_panel = render_score_panel(score)
     controls_panel = render_controls_panel()
+    high_scores_text = get_high_scores()
+    high_scores_panel = Panel(high_scores_text, title="LEADERBOARD", width=24)
 
     full_rows = [
                 i for i, row in enumerate(board) if
@@ -203,7 +206,8 @@ def clear_lines(board, live, score, next_piece):
             layout["sidebar"].split_column(
                 Layout(next_panel),
                 Layout(score_panel),
-                Layout(controls_panel)
+                Layout(controls_panel),
+                Layout(high_scores_panel)
             )
 
             live.update(Panel(layout, height=24, width=80, border_style="dim"))
@@ -296,6 +300,7 @@ Press [green]R[/green] to restart or [cyan]Q[/cyan] to quit.
                                 restart_requested = True
                                 break  # Exit inner loop
 
+                        submit_score("Player", score)
                         break
 
                 # Render the updated board each frame

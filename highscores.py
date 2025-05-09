@@ -23,7 +23,7 @@ def get_high_scores(limit=10):
     records = SCORES_SHEET.get_all_records()
     sorted_scores = sorted(
                             records,
-                            key=lambda r: int(r["score"]),
+                            key=lambda r: int(r["Score"]),
                             reverse=True
                             )
     top_scores = sorted_scores[:limit]
@@ -31,7 +31,7 @@ def get_high_scores(limit=10):
     lines = ["[bold underline]HIGH SCORES[/bold underline]"]
     for i, entry in enumerate(top_scores, 1):
         name = entry.get("Name", "Anon")
-        score = entry.get("score", 0)
+        score = entry.get("Score", 0)
         lines.append(f"{i}. {name:<10} {score}")
         lines.append("")  # blank line for spacing
 
