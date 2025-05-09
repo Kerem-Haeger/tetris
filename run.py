@@ -160,6 +160,26 @@ def render_side_panel(score, next_piece):
     return [score_panel, next_panel]
 
 
+def clear_lines(board):
+    """
+    Removes full lines and returns the updated board and number of lines cleared.
+    """
+    new_board = []
+    lines_cleared = 0
+
+    for row in board:
+        if all(cell != EMPTY for cell in row):
+            lines_cleared += 1
+        else:
+            new_board.append(row)
+
+    # Add empty rows on top to maintain height
+    while len(new_board) < BOARD_HEIGHT:
+        new_board.insert(0, [EMPTY for _ in range(BOARD_WIDTH)])
+
+    return new_board, lines_cleared
+
+
 def main():
     board = create_board()
     score = 0
@@ -196,6 +216,10 @@ def main():
             else:
                 lock_piece(current_piece, board)
                 score += 10
+
+                board, lines = clear_lines(board)
+                score += lines * 100 
+
                 current_piece = next_piece
                 next_piece = new_random_piece()
 
