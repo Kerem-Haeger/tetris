@@ -50,15 +50,7 @@ TETROMINOES = {
 }
 
 # Emoji to represent each tetromino visually
-TETROMINO_EMOJIS = {
-    "I": "🟦",
-    "O": "🟨",
-    "T": "🟪",
-    "L": "🟧",
-    "J": "🟥",
-    "S": "🟩",
-    "Z": "⬜"
-}
+TETROMINO_EMOJIS = ["🟥", "🟦", "🟨", "🟩", "🟪", "🟧"]
 
 
 class Piece:
@@ -108,7 +100,7 @@ class Piece:
 def new_random_piece():
     name = random.choice(list(TETROMINOES.keys()))
     shape = TETROMINOES[name]
-    emoji = TETROMINO_EMOJIS[name]
+    emoji = random.choice(TETROMINO_EMOJIS)
     return Piece(name, shape, emoji)
 
 
@@ -155,7 +147,11 @@ def render_next_piece(piece):
 
 
 def render_side_panel(score, next_piece):
-    score_panel = Panel(f"[bold green]{score}[/bold green]", title="SCORE", width=20)
+    score_panel = Panel(f"""
+[bold green]{score}[/bold green]""",
+                        title="SCORE",
+                        width=20
+                        )
     next_panel = Panel(render_next_piece(next_piece), title="NEXT", width=20)
     return [score_panel, next_panel]
 
@@ -165,7 +161,10 @@ def clear_lines(board, live):
     Animates and clears full lines with a wiping effect.
     Returns the updated board and number of lines cleared.
     """
-    full_rows = [i for i, row in enumerate(board) if all(cell != EMPTY for cell in row)]
+    full_rows = [
+                i for i, row in enumerate(board) if
+                all(cell != EMPTY for cell in row)
+                ]
     lines_cleared = len(full_rows)
 
     if lines_cleared == 0:
@@ -176,7 +175,12 @@ def clear_lines(board, live):
     for idx in full_rows:
         for col in range(BOARD_WIDTH):
             temp_board[idx][col] = "⬜"  # Replace one cell at a time
-            game_panel = Panel(render_board(temp_board), title="TETRIS", border_style="bold red", width=24)
+            game_panel = Panel(
+                            render_board(temp_board),
+                            title="TETRIS",
+                            border_style="bold red",
+                            width=24
+                            )
             live.update(Columns([game_panel]))
             time.sleep(0.02)  # adjust speed for faster/slower wipe
 
@@ -194,7 +198,9 @@ def main():
     current_piece = new_random_piece()
     next_piece = new_random_piece()
 
-    with term.cbreak(), Live(console=console, refresh_per_second=10, screen=True) as live:
+    with term.cbreak(), Live(
+        console=console, refresh_per_second=10, screen=True
+                            ) as live:
         while True:
             key = term.inkey(timeout=TICK_RATE)
 
@@ -239,7 +245,12 @@ def main():
 
             temp_board = add_piece_to_board(current_piece, board)
             side_panels = render_side_panel(score, next_piece)
-            game_panel = Panel(render_board(temp_board), title="TETRIS", border_style="bold red", width=24)
+            game_panel = Panel(
+                render_board(temp_board),
+                title="TETRIS",
+                border_style="bold red",
+                width=24
+                )
             live.update(Columns([game_panel] + side_panels))
 
 
