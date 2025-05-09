@@ -2,7 +2,7 @@ from rich.console import Console
 from rich.live import Live
 from rich.panel import Panel
 from rich.columns import Columns
-from time import sleep
+import time
 from blessed import Terminal
 import random
 import copy
@@ -98,7 +98,7 @@ class Piece:
                     if (board_r >= BOARD_HEIGHT or
                         board_c < 0 or
                         board_c >= BOARD_WIDTH or
-                        board[board_r][board_c] != EMPTY):
+                            board[board_r][board_c] != EMPTY):
                         return  # Invalid rotation, so cancel
 
         # Apply rotation
@@ -160,20 +160,28 @@ def render_side_panel(score, next_piece):
     return [score_panel, next_panel]
 
 
-def clear_lines(board):
+def clear_lines(board, live):
     """
-    Removes full lines and returns the updated board and number of lines cleared.
+    Animates and clears full lines with a wiping effect.
+    Returns the updated board and number of lines cleared.
     """
-    new_board = []
-    lines_cleared = 0
+    full_rows = [i for i, row in enumerate(board) if all(cell != EMPTY for cell in row)]
+    lines_cleared = len(full_rows)
 
-    for row in board:
-        if all(cell != EMPTY for cell in row):
-            lines_cleared += 1
-        else:
-            new_board.append(row)
+    if lines_cleared == 0:
+        return board, 0
 
-    # Add empty rows on top to maintain height
+    temp_board = copy.deepcopy(board)
+
+    for idx in full_rows:
+        for col in range(BOARD_WIDTH):
+            temp_board[idx][col] = "⬜"  # Replace one cell at a time
+            game_panel = Panel(render_board(temp_board), title="TETRIS", border_style="bold red", width=24)
+            live.update(Columns([game_panel]))
+            time.sleep(0.02)  # adjust speed for faster/slower wipe
+
+    # Remove the full rows
+    new_board = [row for i, row in enumerate(board) if i not in full_rows]
     while len(new_board) < BOARD_HEIGHT:
         new_board.insert(0, [EMPTY for _ in range(BOARD_WIDTH)])
 
@@ -217,21 +225,22 @@ def main():
                 lock_piece(current_piece, board)
                 score += 10
 
-                board, lines = clear_lines(board)
-                score += lines * 100 
+                board, lines = clear_lines(board, live)
+                score += lines * 100
 
                 current_piece = next_piece
                 next_piece = new_random_piece()
 
                 if not can_move(current_piece, board, dr=0):
-                    live.update(Panel(f"[bold red]Game Over![/bold red]\n\nFinal Score: {score}"))
+                    live.update(Panel(f"""
+[bold red]Game Over![/bold red]\n\nFinal Score: {score}
+                                    """))
                     break
 
             temp_board = add_piece_to_board(current_piece, board)
             side_panels = render_side_panel(score, next_piece)
             game_panel = Panel(render_board(temp_board), title="TETRIS", border_style="bold red", width=24)
             live.update(Columns([game_panel] + side_panels))
-
 
 
 if __name__ == "__main__":
