@@ -227,11 +227,9 @@ def main():
         tick_rate = 0.5
         current_piece = new_random_piece()
         next_piece = new_random_piece()
+        restart_requested = False  # ✅ Moved outside the Live context
 
-        with term.cbreak(), Live(
-            console=console,
-            refresh_per_second=10
-                                ) as live:
+        with term.cbreak(), Live(console=console, refresh_per_second=10) as live:
             while True:  # Inner game loop
                 key = term.inkey(timeout=tick_rate)
 
@@ -278,9 +276,7 @@ def main():
                         game_over_panel = Panel(
                             f"[bold red]Game Over![/bold red]\n"
                             f"[bold]Score:[/bold] {score}\n\n"
-                            f"""
-Press [green]R[/green] to restart or [cyan]Q[/cyan] to quit.
-                            """,
+                            f"Press [green]R[/green] to restart or [cyan]Q[/cyan] to quit.",
                             title="GAME OVER",
                             border_style="red",
                             width=40
@@ -293,9 +289,10 @@ Press [green]R[/green] to restart or [cyan]Q[/cyan] to quit.
                             if key.lower() == "q":
                                 return
                             elif key.lower() == "r":
-                                break  # Restart the game
+                                restart_requested = True
+                                break  # Exit inner loop
 
-                        break  # Exit inner game loop to restart outer loop
+                        break  # Exit inner game loop and let Live() context close
 
                 # Render the updated board each frame
                 temp_board = add_piece_to_board(current_piece, board)
@@ -307,12 +304,12 @@ Press [green]R[/green] to restart or [cyan]Q[/cyan] to quit.
                     title="TETRIS",
                     border_style="bold red",
                     width=24
-                    )
+                )
                 layout = Layout()
                 layout.split_row(
                     Layout(game_panel, name="game", size=24),
                     Layout(name="sidebar")
-                                )
+                )
 
                 layout["sidebar"].split_column(
                     Layout(next_panel),
@@ -325,7 +322,14 @@ Press [green]R[/green] to restart or [cyan]Q[/cyan] to quit.
                     height=24,
                     width=80,
                     border_style="dim")
-                    )
+                )
+
+        # ✅ OUTSIDE the Live context — now we can clear the screen safely
+        if restart_requested:
+            console.clear()
+            continue  # Restart outer loop
+        else:
+            break  # Quit the game
 
 
 main()
