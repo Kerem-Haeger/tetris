@@ -241,9 +241,9 @@ def main():
         high_scores_text = get_high_scores()
 
         with term.cbreak(), Live(
-                                console=console,
-                                refresh_per_second=10
-                                ) as live:
+            console=console,
+            refresh_per_second=10
+        ) as live:
             while True:  # Inner game loop
                 key = term.inkey(timeout=tick_rate)
 
@@ -280,7 +280,7 @@ def main():
                         score,
                         next_piece,
                         high_scores_text
-                        )
+                    )
                     score += lines * 100
                     lines_total += lines
 
@@ -293,12 +293,11 @@ def main():
                     next_piece = new_random_piece()
 
                     if not can_move(current_piece, board, dr=0):
+                        # Display final Game Over panel
                         game_over_panel = Panel(
                             f"[bold red]Game Over![/bold red]\n"
                             f"[bold]Score:[/bold] {score}\n\n"
-                            f"""
-Press [green]R[/green] to restart or [cyan]Q[/cyan] to quit.
-                            """,
+                            f"(press Enter below to submit your name)",
                             title="GAME OVER",
                             border_style="red",
                             width=40
@@ -312,10 +311,10 @@ Press [green]R[/green] to restart or [cyan]Q[/cyan] to quit.
                 score_panel = render_score_panel(score)
                 controls_panel = render_controls_panel()
                 high_scores_panel = Panel(
-                                        high_scores_text,
-                                        title="LEADERBOARD",
-                                        width=24
-                                        )
+                    high_scores_text,
+                    title="LEADERBOARD",
+                    width=24
+                )
                 game_panel = Panel(
                     render_board(temp_board),
                     title="TETRIS",
@@ -344,24 +343,11 @@ Press [green]R[/green] to restart or [cyan]Q[/cyan] to quit.
                     border_style="dim")
                 )
 
-        # Prompt for name immediately after game ends
-        # After `with Live(...)` block
-        console.clear()  # Clear leftover layout
-
-        # Redisplay a clean Game Over panel
-        console.print(Panel(
-            f"[bold red]Game Over![/bold red]\n\n"
-            f"[bold]Score:[/bold] {score}",
-            title="GAME OVER",
-            border_style="red",
-            width=40,
-            expand=False
-        ), justify="center")
-
-        # Prompt for name
+        # Prompt for name while leaderboard and game screen are still visible
         console.print("""
 \n[bold cyan]Enter your name for the leaderboard:[/bold cyan]
-(max 10 characters, or press Enter to skip)""")
+(max 10 characters, or press Enter to skip)
+                    """)
         name = console.input("> ").strip()
         if not name:
             name = "Player"
@@ -370,20 +356,27 @@ Press [green]R[/green] to restart or [cyan]Q[/cyan] to quit.
 
         submit_score(name, score)
 
-        # Ask to restart
-        console.print("""
-\nPress [green]R[/green] to restart or [cyan]Q[/cyan] to quit.
-                    """)
+        # Now clear everything and show the nice Game Over panel
+        console.clear()
+        console.print(Panel(
+            f"\n\n[bold]Score:[/bold] {score}\n\n"
+            f"Press [green]R[/green] to restart or [cyan]Q[/cyan] to quit.",
+            title="GAME OVER",
+            border_style="red",
+            width=40,
+            expand=False
+        ), justify="center")
 
-        while True:
-            key = term.inkey()
-            if not key:
-                continue
-            if key.lower() == "q":
-                return
-            elif key.lower() == "r":
-                restart_requested = True
-                break
+        with term.cbreak():
+            while True:
+                key = term.inkey(timeout=0.5)
+                if key:
+                    pressed = str(key).lower()
+                    if pressed == "q":
+                        return
+                    elif pressed == "r":
+                        restart_requested = True
+                        break
 
         if restart_requested:
             console.clear()
