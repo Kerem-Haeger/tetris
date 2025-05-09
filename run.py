@@ -193,7 +193,7 @@ def clear_lines(board, live, score, next_piece, high_scores_text):
 
     for idx in full_rows:
         for col in range(BOARD_WIDTH):
-            temp_board[idx][col] = "⬜"
+            temp_board[idx][col] = "[white]▓▓[/white]"
 
             # Only the game board is changing
             game_panel = Panel(
