@@ -227,9 +227,12 @@ def main():
         tick_rate = 0.5
         current_piece = new_random_piece()
         next_piece = new_random_piece()
-        restart_requested = False  # ✅ Moved outside the Live context
+        restart_requested = False
 
-        with term.cbreak(), Live(console=console, refresh_per_second=10) as live:
+        with term.cbreak(), Live(
+                                console=console,
+                                refresh_per_second=10
+                                ) as live:
             while True:  # Inner game loop
                 key = term.inkey(timeout=tick_rate)
 
@@ -276,7 +279,9 @@ def main():
                         game_over_panel = Panel(
                             f"[bold red]Game Over![/bold red]\n"
                             f"[bold]Score:[/bold] {score}\n\n"
-                            f"Press [green]R[/green] to restart or [cyan]Q[/cyan] to quit.",
+                            f"""
+Press [green]R[/green] to restart or [cyan]Q[/cyan] to quit.
+                            """,
                             title="GAME OVER",
                             border_style="red",
                             width=40
@@ -292,7 +297,7 @@ def main():
                                 restart_requested = True
                                 break  # Exit inner loop
 
-                        break  # Exit inner game loop and let Live() context close
+                        break
 
                 # Render the updated board each frame
                 temp_board = add_piece_to_board(current_piece, board)
@@ -324,7 +329,6 @@ def main():
                     border_style="dim")
                 )
 
-        # ✅ OUTSIDE the Live context — now we can clear the screen safely
         if restart_requested:
             console.clear()
             continue  # Restart outer loop
