@@ -1,3 +1,214 @@
-# Your code goes here.
-# You can delete these comments, but do not change the name of this file
-# Write your code to expect a terminal of 80 characters wide and 24 rows high
+from rich.console import Console
+from rich.live import Live
+from rich.panel import Panel
+from rich.columns import Columns
+from time import sleep
+from blessed import Terminal
+import random
+import copy
+
+# Constants
+BOARD_WIDTH = 10
+BOARD_HEIGHT = 20
+EMPTY = "  "  # Two spaces to match emoji width
+TICK_RATE = 0.5
+
+console = Console()
+term = Terminal()
+
+# Tetromino shapes (logic)
+TETROMINOES = {
+    "I": [
+        [1, 1, 1, 1]
+        ],
+    "O": [
+        [1, 1],
+        [1, 1]
+        ],
+    "L": [
+        [1, 0],
+        [1, 0],
+        [1, 1]
+        ],
+    "J": [
+        [0, 1],
+        [0, 1],
+        [1, 1]
+        ],
+    "T": [
+        [1, 1, 1],
+        [0, 1, 0]
+        ],
+    "S": [
+        [0, 1, 1],
+        [1, 1, 0]
+        ],
+    "Z": [
+        [1, 1, 0],
+        [0, 1, 1]
+        ]
+}
+
+# Emoji to represent each tetromino visually
+TETROMINO_EMOJIS = {
+    "I": "🟦",
+    "O": "🟨",
+    "T": "🟪",
+    "L": "🟧",
+    "J": "🟥",
+    "S": "🟩",
+    "Z": "⬜"
+}
+
+
+class Piece:
+    def __init__(self, shape_name, shape, emoji):
+        self.shape_name = shape_name
+        self.shape = shape
+        self.emoji = emoji
+        self.row = 0
+        self.col = BOARD_WIDTH // 2 - len(shape[0]) // 2
+
+    def get_coords(self):
+        coords = []
+        for r, row in enumerate(self.shape):
+            for c, val in enumerate(row):
+                if val:
+                    coords.append((self.row + r, self.col + c))
+        return coords
+
+    def rotate(self, board):
+        """
+        Attempt to rotate the piece clockwise. Only applies
+        if no collision occurs.
+        """
+        # Rotate shape clockwise
+        rotated = [list(row) for row in zip(*self.shape[::-1])]
+
+        # Get width and height of rotated shape
+        rotated_width = len(rotated[0])
+        rotated_height = len(rotated)
+
+        # Check if rotation would cause collision or go off-grid
+        for r in range(rotated_height):
+            for c in range(rotated_width):
+                if rotated[r][c]:
+                    board_r = self.row + r
+                    board_c = self.col + c
+                    if (board_r >= BOARD_HEIGHT or
+                        board_c < 0 or
+                        board_c >= BOARD_WIDTH or
+                        board[board_r][board_c] != EMPTY):
+                        return  # Invalid rotation, so cancel
+
+        # Apply rotation
+        self.shape = rotated
+
+
+def new_random_piece():
+    name = random.choice(list(TETROMINOES.keys()))
+    shape = TETROMINOES[name]
+    emoji = TETROMINO_EMOJIS[name]
+    return Piece(name, shape, emoji)
+
+
+def create_board():
+    return [[EMPTY for _ in range(BOARD_WIDTH)] for _ in range(BOARD_HEIGHT)]
+
+
+def can_move(piece, board, dr=1, dc=0):
+    for r, c in piece.get_coords():
+        nr, nc = r + dr, c + dc
+        if nr >= BOARD_HEIGHT or nc < 0 or nc >= BOARD_WIDTH:
+            return False
+        if board[nr][nc] != EMPTY:
+            return False
+    return True
+
+
+def lock_piece(piece, board):
+    for r, c in piece.get_coords():
+        if 0 <= r < BOARD_HEIGHT and 0 <= c < BOARD_WIDTH:
+            board[r][c] = piece.emoji
+
+
+def add_piece_to_board(piece, board):
+    temp_board = copy.deepcopy(board)
+    for r, c in piece.get_coords():
+        if 0 <= r < BOARD_HEIGHT and 0 <= c < BOARD_WIDTH:
+            temp_board[r][c] = piece.emoji
+    return temp_board
+
+
+def render_board(board):
+    return "\n".join("".join(row) for row in board)
+
+
+def render_next_piece(piece):
+    lines = []
+    for row in piece.shape:
+        line = ""
+        for val in row:
+            line += piece.emoji if val else EMPTY
+        lines.append(line)
+    return "\n".join(lines)
+
+
+def render_side_panel(score, next_piece):
+    score_panel = Panel(f"[bold green]{score}[/bold green]", title="SCORE", width=20)
+    next_panel = Panel(render_next_piece(next_piece), title="NEXT", width=20)
+    return [score_panel, next_panel]
+
+
+def main():
+    board = create_board()
+    score = 0
+    current_piece = new_random_piece()
+    next_piece = new_random_piece()
+
+    with term.cbreak(), Live(console=console, refresh_per_second=10, screen=True) as live:
+        while True:
+            key = term.inkey(timeout=TICK_RATE)
+
+            # handle key presses
+            if key.name == "KEY_LEFT":
+                if can_move(current_piece, board, dr=0, dc=-1):
+                    current_piece.col -= 1
+
+            elif key.name == "KEY_RIGHT":
+                if can_move(current_piece, board, dr=0, dc=1):
+                    current_piece.col += 1
+
+            elif key.name == "KEY_DOWN":
+                if can_move(current_piece, board, dr=1):
+                    current_piece.row += 1
+
+            elif key.name == "KEY_UP":
+                current_piece.rotate(board)
+
+            elif key == "q":
+                live.update(Panel(f"Quit! Final score: {score}"))
+                break
+
+            # apply gravity
+            if can_move(current_piece, board, dr=1):
+                current_piece.row += 1
+            else:
+                lock_piece(current_piece, board)
+                score += 10
+                current_piece = next_piece
+                next_piece = new_random_piece()
+
+                if not can_move(current_piece, board, dr=0):
+                    live.update(Panel(f"[bold red]Game Over![/bold red]\n\nFinal Score: {score}"))
+                    break
+
+            temp_board = add_piece_to_board(current_piece, board)
+            side_panels = render_side_panel(score, next_piece)
+            game_panel = Panel(render_board(temp_board), title="TETRIS", border_style="bold red", width=24)
+            live.update(Columns([game_panel] + side_panels))
+
+
+
+if __name__ == "__main__":
+    main()
