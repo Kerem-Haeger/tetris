@@ -237,7 +237,7 @@ def main():
                 lines_total += lines
 
                 # Every 10 lines, level up
-                if lines_total >= level * 10:
+                if lines_total >= level * 5:
                     level += 1
 
                 tick_rate = max(0.1, 0.5 - (level - 1) * 0.05)
