@@ -304,17 +304,6 @@ Press [green]R[/green] to restart or [cyan]Q[/cyan] to quit.
                             width=40
                         )
                         live.update(game_over_panel)
-
-                        # Wait for R or Q
-                        while True:
-                            key = term.inkey()
-                            if key.lower() == "q":
-                                return
-                            elif key.lower() == "r":
-                                restart_requested = True
-                                break  # Exit inner loop
-
-                        submit_score("Player", score)
                         break
 
                 # Render the updated board each frame
@@ -355,12 +344,51 @@ Press [green]R[/green] to restart or [cyan]Q[/cyan] to quit.
                     border_style="dim")
                 )
 
+        # Prompt for name immediately after game ends
+        # After `with Live(...)` block
+        console.clear()  # Clear leftover layout
+
+        # Redisplay a clean Game Over panel
+        console.print(Panel(
+            f"[bold red]Game Over![/bold red]\n\n"
+            f"[bold]Score:[/bold] {score}",
+            title="GAME OVER",
+            border_style="red",
+            width=40,
+            expand=False
+        ), justify="center")
+
+        # Prompt for name
+        console.print("\n[bold cyan]Enter your name for the leaderboard:[/bold cyan] (max 10 characters, press Enter to skip)")
+        name = console.input("> ").strip()
+        if not name:
+            name = "Player"
+        else:
+            name = name[:10]
+
+        submit_score(name, score)
+
+        # Ask to restart
+        console.print("""
+\nPress [green]R[/green] to restart or [cyan]Q[/cyan] to quit.
+                    """)
+
+        while True:
+            key = term.inkey()
+            if not key:
+                continue
+            if key.lower() == "q":
+                return
+            elif key.lower() == "r":
+                restart_requested = True
+                break
+
         if restart_requested:
             console.clear()
             high_scores_text = get_high_scores()
             continue  # Restart outer loop
         else:
-            break  # Quit the game
+            break
 
 
 main()
