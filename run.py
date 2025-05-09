@@ -2,6 +2,7 @@ from rich.console import Console
 from rich.live import Live
 from rich.panel import Panel
 from rich.columns import Columns
+from rich.layout import Layout
 import time
 from blessed import Terminal
 import random
@@ -144,21 +145,34 @@ def render_next_piece(piece):
     return "\n".join(lines)
 
 
-def render_side_panel(score, next_piece):
-    score_panel = Panel(f"""
-[bold green]{score}[/bold green]""",
-                        title="SCORE",
-                        width=20
-                        )
-    next_panel = Panel(render_next_piece(next_piece), title="NEXT", width=20)
-    return [score_panel, next_panel]
+def render_score_panel(score):
+    return Panel(f"[bold green]{score}[/bold green]", title="SCORE", width=20)
 
 
-def clear_lines(board, live):
+def render_next_panel(next_piece):
+    return Panel(render_next_piece(next_piece), title="NEXT", width=20)
+
+
+def render_controls_panel():
+    controls_text = (
+        "[bold]←[/bold] Move Left\n"
+        "[bold]→[/bold] Move Right\n"
+        "[bold]↓[/bold] Soft Drop\n"
+        "[bold]↑[/bold] Rotate\n"
+        "[bold]Q[/bold] Quit"
+    )
+    return Panel(controls_text, title="CONTROLS", width=20)
+
+
+def clear_lines(board, live, score, next_piece):
     """
     Animates and clears full lines with a wiping effect.
     Returns the updated board and number of lines cleared.
     """
+    next_panel = render_next_panel(next_piece)
+    score_panel = render_score_panel(score)
+    controls_panel = render_controls_panel()
+
     full_rows = [
                 i for i, row in enumerate(board) if
                 all(cell != EMPTY for cell in row)
@@ -172,15 +186,25 @@ def clear_lines(board, live):
 
     for idx in full_rows:
         for col in range(BOARD_WIDTH):
-            temp_board[idx][col] = "⬜"  # Replace one cell at a time
-            game_panel = Panel(
-                            render_board(temp_board),
-                            title="TETRIS",
-                            border_style="bold red",
-                            width=24
-                            )
-            live.update(Columns([game_panel]))
-            time.sleep(0.02)  # adjust speed for faster/slower wipe
+            temp_board[idx][col] = "⬜"
+
+            # Only the game board is changing
+            game_panel = Panel(render_board(temp_board), title="TETRIS", border_style="bold red", width=24)
+
+            layout = Layout()
+            layout.split_row(
+                Layout(game_panel, name="game", size=24),
+                Layout(name="sidebar")
+            )
+
+            layout["sidebar"].split_column(
+                Layout(next_panel),
+                Layout(score_panel),
+                Layout(controls_panel)
+            )
+
+            live.update(Panel(layout, height=24, width=80, border_style="dim"))
+            time.sleep(0.02)
 
     # Remove the full rows
     new_board = [row for i, row in enumerate(board) if i not in full_rows]
@@ -191,75 +215,98 @@ def clear_lines(board, live):
 
 
 def main():
-    board = create_board()
-    score = 0
-    level = 1
-    lines_total = 0
-    tick_rate = 0.5
-    current_piece = new_random_piece()
-    next_piece = new_random_piece()
+    while True:  # Outer loop to support restarting the game
+        board = create_board()
+        score = 0
+        level = 1
+        lines_total = 0
+        tick_rate = 0.5
+        current_piece = new_random_piece()
+        next_piece = new_random_piece()
 
-    with term.cbreak(), Live(
-        console=console, refresh_per_second=10, screen=True
-                            ) as live:
-        while True:
-            key = term.inkey(timeout=tick_rate)
+        with term.cbreak(), Live(console=console, refresh_per_second=10) as live:
+            while True:  # Inner game loop
+                key = term.inkey(timeout=tick_rate)
 
-            # handle key presses
-            if key.name == "KEY_LEFT":
-                if can_move(current_piece, board, dr=0, dc=-1):
-                    current_piece.col -= 1
+                # Handle key input
+                if key.name == "KEY_LEFT":
+                    if can_move(current_piece, board, dr=0, dc=-1):
+                        current_piece.col -= 1
 
-            elif key.name == "KEY_RIGHT":
-                if can_move(current_piece, board, dr=0, dc=1):
-                    current_piece.col += 1
+                elif key.name == "KEY_RIGHT":
+                    if can_move(current_piece, board, dr=0, dc=1):
+                        current_piece.col += 1
 
-            elif key.name == "KEY_DOWN":
+                elif key.name == "KEY_DOWN":
+                    if can_move(current_piece, board, dr=1):
+                        current_piece.row += 1
+
+                elif key.name == "KEY_UP":
+                    current_piece.rotate(board)
+
+                elif key == "q":
+                    live.update(Panel(f"Quit! Final score: {score}"))
+                    return  # Exit the game
+
+                # Apply gravity
                 if can_move(current_piece, board, dr=1):
                     current_piece.row += 1
+                else:
+                    lock_piece(current_piece, board)
+                    score += 10
 
-            elif key.name == "KEY_UP":
-                current_piece.rotate(board)
+                    board, lines = clear_lines(board, live, score, next_piece)
+                    score += lines * 100
+                    lines_total += lines
 
-            elif key == "q":
-                live.update(Panel(f"Quit! Final score: {score}"))
-                break
+                    if lines_total >= level * 5:
+                        level += 1
 
-            # apply gravity
-            if can_move(current_piece, board, dr=1):
-                current_piece.row += 1
-            else:
-                lock_piece(current_piece, board)
-                score += 10
+                    tick_rate = max(0.1, 0.5 - (level - 1) * 0.05)
 
-                board, lines = clear_lines(board, live)
-                score += lines * 100
-                lines_total += lines
+                    current_piece = next_piece
+                    next_piece = new_random_piece()
 
-                # Every 10 lines, level up
-                if lines_total >= level * 5:
-                    level += 1
+                    if not can_move(current_piece, board, dr=0):
+                        game_over_panel = Panel(
+                            f"[bold red]Game Over![/bold red]\n"
+                            f"[bold]Score:[/bold] {score}\n\n"
+                            f"Press [green]R[/green] to restart or [cyan]Q[/cyan] to quit.",
+                            title="GAME OVER",
+                            border_style="red",
+                            width=40
+                        )
+                        live.update(game_over_panel)
 
-                tick_rate = max(0.1, 0.5 - (level - 1) * 0.05)
+                        # Wait for R or Q
+                        while True:
+                            key = term.inkey()
+                            if key.lower() == "q":
+                                return
+                            elif key.lower() == "r":
+                                break  # Restart the game
 
-                current_piece = next_piece
-                next_piece = new_random_piece()
+                        break  # Exit inner game loop to restart outer loop
 
-                if not can_move(current_piece, board, dr=0):
-                    live.update(Panel(f"""
-[bold red]Game Over![/bold red]\n\nFinal Score: {score}
-                                    """))
-                    break
+                # Render the updated board each frame
+                temp_board = add_piece_to_board(current_piece, board)
+                next_panel = render_next_panel(next_piece)
+                score_panel = render_score_panel(score)
+                controls_panel = render_controls_panel()
+                game_panel = Panel(render_board(temp_board), title="TETRIS", border_style="bold red", width=24)
+                layout = Layout()
+                layout.split_row(
+                    Layout(game_panel, name="game", size=24),
+                    Layout(name="sidebar")
+                                )
 
-            temp_board = add_piece_to_board(current_piece, board)
-            side_panels = render_side_panel(score, next_piece)
-            game_panel = Panel(
-                render_board(temp_board),
-                title="TETRIS",
-                border_style="bold red",
-                width=24
+                layout["sidebar"].split_column(
+                    Layout(next_panel),
+                    Layout(score_panel),
+                    Layout(controls_panel)
                 )
-            live.update(Columns([game_panel] + side_panels))
+
+                live.update(Panel(layout, height=24, width=80, border_style="dim"))
 
 
 main()
