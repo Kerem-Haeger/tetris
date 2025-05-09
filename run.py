@@ -3,6 +3,7 @@ from rich.live import Live
 from rich.panel import Panel
 from rich.layout import Layout
 from blessed import Terminal
+import os
 import time
 import random
 import copy
@@ -11,7 +12,7 @@ from highscores import get_high_scores, submit_score
 # Constants
 BOARD_WIDTH = 10
 BOARD_HEIGHT = 20
-EMPTY = " "
+EMPTY = "  "
 TICK_RATE = 0.5
 
 TETROMINOES = {
@@ -46,16 +47,13 @@ TETROMINOES = {
         ]
 }
 
-# TETROMINO_EMOJIS = ["🟥", "🟦", "🟨", "🟩", "🟪", "🟧"]
-TETROMINO_COLORS = [
-    "[red]■[/red]",
-    "[blue]■[/blue]",
-    "[yellow]■[/yellow]",
-    "[green]■[/green]",
-    "[magenta]■[/magenta]",
-    "[cyan]■[/cyan]",
-    "[white]■[/white]",
-]
+IS_HEROKU = os.getenv("DYNO") is not None
+
+TETROMINO_EMOJIS = (
+    ["🟥", "🟦", "🟨", "🟩", "🟪", "🟧"] if not IS_HEROKU else
+    ["[red]##[/red]", "[blue]##[/blue]", "[yellow]##[/yellow]",
+        "[green]##[/green]", "[magenta]##[/magenta]", "[cyan]##[/cyan]"]
+)
 
 console = Console()
 term = Terminal()
@@ -107,7 +105,7 @@ class Piece:
 def new_random_piece():
     name = random.choice(list(TETROMINOES.keys()))
     shape = TETROMINOES[name]
-    block = random.choice(TETROMINO_COLORS)
+    block = random.choice(TETROMINO_EMOJIS)
     return Piece(name, shape, block)
 
 
