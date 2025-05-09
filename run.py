@@ -1,7 +1,6 @@
 from rich.console import Console
 from rich.live import Live
 from rich.panel import Panel
-from rich.columns import Columns
 from rich.layout import Layout
 import time
 from blessed import Terminal
@@ -189,7 +188,12 @@ def clear_lines(board, live, score, next_piece):
             temp_board[idx][col] = "⬜"
 
             # Only the game board is changing
-            game_panel = Panel(render_board(temp_board), title="TETRIS", border_style="bold red", width=24)
+            game_panel = Panel(
+                render_board(temp_board),
+                title="TETRIS",
+                border_style="bold red",
+                width=24
+                )
 
             layout = Layout()
             layout.split_row(
@@ -224,7 +228,10 @@ def main():
         current_piece = new_random_piece()
         next_piece = new_random_piece()
 
-        with term.cbreak(), Live(console=console, refresh_per_second=10) as live:
+        with term.cbreak(), Live(
+            console=console,
+            refresh_per_second=10
+                                ) as live:
             while True:  # Inner game loop
                 key = term.inkey(timeout=tick_rate)
 
@@ -271,7 +278,9 @@ def main():
                         game_over_panel = Panel(
                             f"[bold red]Game Over![/bold red]\n"
                             f"[bold]Score:[/bold] {score}\n\n"
-                            f"Press [green]R[/green] to restart or [cyan]Q[/cyan] to quit.",
+                            f"""
+Press [green]R[/green] to restart or [cyan]Q[/cyan] to quit.
+                            """,
                             title="GAME OVER",
                             border_style="red",
                             width=40
@@ -293,7 +302,12 @@ def main():
                 next_panel = render_next_panel(next_piece)
                 score_panel = render_score_panel(score)
                 controls_panel = render_controls_panel()
-                game_panel = Panel(render_board(temp_board), title="TETRIS", border_style="bold red", width=24)
+                game_panel = Panel(
+                    render_board(temp_board),
+                    title="TETRIS",
+                    border_style="bold red",
+                    width=24
+                    )
                 layout = Layout()
                 layout.split_row(
                     Layout(game_panel, name="game", size=24),
@@ -306,7 +320,12 @@ def main():
                     Layout(controls_panel)
                 )
 
-                live.update(Panel(layout, height=24, width=80, border_style="dim"))
+                live.update(Panel(
+                    layout,
+                    height=24,
+                    width=80,
+                    border_style="dim")
+                    )
 
 
 main()
