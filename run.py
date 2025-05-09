@@ -359,7 +359,9 @@ Press [green]R[/green] to restart or [cyan]Q[/cyan] to quit.
         ), justify="center")
 
         # Prompt for name
-        console.print("\n[bold cyan]Enter your name for the leaderboard:[/bold cyan] (max 10 characters, press Enter to skip)")
+        console.print("""
+\n[bold cyan]Enter your name for the leaderboard:[/bold cyan]
+(max 10 characters, or press Enter to skip)""")
         name = console.input("> ").strip()
         if not name:
             name = "Player"
