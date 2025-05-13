@@ -4,6 +4,7 @@ from rich.panel import Panel
 from rich.layout import Layout
 from blessed import Terminal
 import os
+import sys
 import time
 import random
 import copy
@@ -373,7 +374,9 @@ def main():
                 if key:
                     pressed = str(key).lower()
                     if pressed == "q":
-                        return
+                        console.clear()
+                        console.print("👋 Thanks for playing!\n")
+                        sys.exit()
                     elif pressed == "r":
                         restart_requested = True
                         break
