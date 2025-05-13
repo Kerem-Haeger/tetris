@@ -69,6 +69,10 @@ class Piece:
         self.col = BOARD_WIDTH // 2 - len(shape[0]) // 2
 
     def get_coords(self):
+        """
+        Return a list of (row, col) coordinates for all blocks in the piece
+        based on its current position.
+        """
         coords = []
         for r, row in enumerate(self.shape):
             for c, val in enumerate(row):
@@ -104,6 +108,9 @@ class Piece:
 
 
 def new_random_piece():
+    """
+    Generate a new random Tetromino piece with a random shape and color.
+    """
     name = random.choice(list(TETROMINOES.keys()))
     shape = TETROMINOES[name]
     block = random.choice(TETROMINO_EMOJIS)
@@ -111,10 +118,16 @@ def new_random_piece():
 
 
 def create_board():
+    """
+    Create and return an empty game board with predefined width and height.
+    """
     return [[EMPTY for _ in range(BOARD_WIDTH)] for _ in range(BOARD_HEIGHT)]
 
 
 def can_move(piece, board, dr=1, dc=0):
+    """
+    Check if a piece can move in the specified direction without collisions.
+    """
     for r, c in piece.get_coords():
         nr, nc = r + dr, c + dc
         if nr >= BOARD_HEIGHT or nc < 0 or nc >= BOARD_WIDTH:
@@ -125,12 +138,14 @@ def can_move(piece, board, dr=1, dc=0):
 
 
 def lock_piece(piece, board):
+    """ Permanently place a piece onto the board at its current position. """
     for r, c in piece.get_coords():
         if 0 <= r < BOARD_HEIGHT and 0 <= c < BOARD_WIDTH:
             board[r][c] = piece.emoji
 
 
 def add_piece_to_board(piece, board):
+    """ Create a copy of the board with the active piece visually added. """
     temp_board = copy.deepcopy(board)
     for r, c in piece.get_coords():
         if 0 <= r < BOARD_HEIGHT and 0 <= c < BOARD_WIDTH:
@@ -139,10 +154,14 @@ def add_piece_to_board(piece, board):
 
 
 def render_board(board):
+    """
+    Convert the board's 2D array into a string representation for display.
+    """
     return "\n".join("".join(row) for row in board)
 
 
 def render_next_piece(piece):
+    """ Generate the string preview of the upcoming Tetromino piece. """
     lines = []
     for row in piece.shape:
         line = ""
@@ -153,14 +172,17 @@ def render_next_piece(piece):
 
 
 def render_score_panel(score):
+    """ Create a Rich panel displaying the current score. """
     return Panel(f"[bold green]{score}[/bold green]", title="SCORE", width=20)
 
 
 def render_next_panel(next_piece):
+    """ Create a Rich panel showing the next upcoming Tetromino. """
     return Panel(render_next_piece(next_piece), title="NEXT", width=20)
 
 
 def render_controls_panel():
+    """ Create a Rich panel listing available control key bindings. """
     controls_text = (
         "[bold]←[/bold] Move Left\n"
         "[bold]→[/bold] Move Right\n"
@@ -375,7 +397,7 @@ def main():
                     pressed = str(key).lower()
                     if pressed == "q":
                         console.clear()
-                        console.print("👋 Thanks for playing!\n")
+                        console.print("👋  Thanks for playing!\n")
                         sys.exit()
                     elif pressed == "r":
                         restart_requested = True

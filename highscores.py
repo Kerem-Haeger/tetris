@@ -16,7 +16,7 @@ SCORES_SHEET = SHEET.worksheet("scores")
 
 def get_high_scores(limit=10):
     """
-    Fetches and returns the top `limit` high scores from the sheet,
+    Fetches and returns the top high scores from the sheet,
     sorted in descending order by score. Returned as a single string
     formatted for use in a Rich Panel.
     """
