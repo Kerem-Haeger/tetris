@@ -17,13 +17,13 @@ Welcome to Tetris!
 [/bold magenta]
 
 [bold white]Controls:[/bold white]
-← Move Left
-→ Move Right
-↓ Soft Drop
-↑ Rotate
-Q Quit
+[cyan]←[/cyan] Move Left
+[cyan]→[/cyan] Move Right
+[cyan]↓[/cyan] Soft Drop
+[cyan]↑[/cyan] Rotate
+[magenta]Q[/magenta] Quit
 
-Press [bold green]Enter[/bold green] to begin...
+Press [green]Enter[/green] to begin...
 """
     console.print(Panel(
         welcome_text,
