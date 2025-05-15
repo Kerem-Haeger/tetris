@@ -1,5 +1,11 @@
 import random
-from constants import TETROMINOES, TETROMINO_EMOJIS, BOARD_WIDTH
+from constants import (
+    TETROMINOES,
+    TETROMINO_EMOJIS,
+    BOARD_WIDTH,
+    BOARD_HEIGHT,
+    EMPTY
+)
 
 
 class Piece:

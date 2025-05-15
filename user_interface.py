@@ -1,6 +1,5 @@
 from rich.console import Console
 from rich.panel import Panel
-from rich.layout import Layout
 from blessed import Terminal
 from constants import EMPTY
 

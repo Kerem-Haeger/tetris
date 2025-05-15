@@ -1,6 +1,7 @@
+import sys
 from rich.live import Live
+from rich.layout import Layout
 from rich.panel import Panel
-from blessed import Terminal
 from board import (
     create_board,
     can_move,
@@ -11,14 +12,9 @@ from board import (
 from piece import new_random_piece
 from user_interface import (
     render_board, render_next_panel, render_score_panel,
-    render_controls_panel, show_game_over_panel
+    render_controls_panel, console, term
 )
 from highscores import get_high_scores, submit_score
-from constants import TICK_RATE
-
-
-console = Console()
-term = Terminal()
 
 
 def game_logic():
