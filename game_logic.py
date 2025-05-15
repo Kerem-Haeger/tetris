@@ -28,16 +28,15 @@ def game_logic():
         current_piece = new_random_piece()
         next_piece = new_random_piece()
         restart_requested = False
-        quit_requested = False  # NEW FLAG
+        quit_requested = False
 
         high_scores_text = get_high_scores()
 
         with term.cbreak(), Live(
             console=console,
             refresh_per_second=10
-        ) as live:
+                ) as live:
             while True:  # Inner game loop
-                # Custom key poll loop
                 valid_keys = (
                     "KEY_LEFT",
                     "KEY_RIGHT",
@@ -56,7 +55,6 @@ def game_logic():
                         key = k
                         break
 
-                # Safely handle input
                 if key:
                     if key.name == "KEY_LEFT":
                         if can_move(current_piece, board, dr=0, dc=-1):
@@ -75,9 +73,8 @@ def game_logic():
 
                     elif str(key).lower() == "q":
                         quit_requested = True
-                        break  # Exit gameplay loop
+                        break
 
-                # Apply gravity
                 if can_move(current_piece, board, dr=1):
                     current_piece.row += 1
                 else:
@@ -104,17 +101,19 @@ def game_logic():
 
                     if not can_move(current_piece, board, dr=0):
                         game_over_panel = Panel(
-                            f"[bold red]Game Over![/bold red]\n"
+                            f"[bold red]Game Over![/bold red]\n\n"
                             f"[bold]Score:[/bold] {score}\n\n"
-                            f"(press Enter below to submit your name)",
+                            f"Would you like to record your score?\n\n"
+                            f"[bold cyan]Press Enter to save[/bold cyan], "
+                            f"""
+[green]R to restart[/green], or [magenta]Q to quit[/magenta]""",
                             title="GAME OVER",
                             border_style="red",
-                            width=40
+                            width=50
                         )
                         live.update(game_over_panel)
                         break
 
-                # Render the updated board each frame
                 temp_board = add_piece_to_board(current_piece, board)
                 next_panel = render_next_panel(next_piece)
                 score_panel = render_score_panel(score)
@@ -152,48 +151,78 @@ def game_logic():
                     border_style="dim")
                 )
 
-        # Handle early quit (skip score input and game over panel)
         if quit_requested:
             console.clear()
             console.print("👋  Thanks for playing!\n")
             sys.exit()
 
-        # Prompt for name after game ends
-        console.print("""
-\n[bold cyan]Enter your name for the leaderboard:[/bold cyan]
-(max 10 characters, or press Enter to skip)
-""")
-        name = console.input("> ").strip()
-        if not name:
-            name = "Player"
-        else:
-            name = name[:10]
-
-        submit_score(name, score)
-
-        # Show clean game over screen with restart/quit
         console.clear()
         console.print(Panel(
-            f"\n\n[bold]Score:[/bold] {score}\n\n"
-            f"Press [green]R[/green] to restart or [cyan]Q[/cyan] to quit.",
+            f"[bold]Score:[/bold] {score}\n\n"
+            f"Would you like to record your score?\n\n"
+            f"[bold cyan]Press Enter to save[/bold cyan], "
+            f"[green]R to restart[/green], or [magenta]Q to quit[/magenta]",
             title="GAME OVER",
             border_style="red",
-            width=40,
+            width=50,
             expand=False
         ), justify="center")
+
+        record_score = False
 
         with term.cbreak():
             while True:
                 key = term.inkey(timeout=0.5)
-                if key:
-                    pressed = str(key).lower()
-                    if pressed == "q":
-                        console.clear()
-                        console.print("👋  Thanks for playing!\n")
-                        sys.exit()
-                    elif pressed == "r":
-                        restart_requested = True
-                        break
+                if not key:
+                    continue
+                if str(key).lower() == "q":
+                    console.clear()
+                    console.print("👋  Thanks for playing!\n")
+                    sys.exit()
+                elif str(key).lower() == "r":
+                    restart_requested = True
+                    break
+                elif key.name == "KEY_ENTER":
+                    record_score = True
+                    break
+
+        if record_score:
+            console.clear()
+            console.print("""
+[bold cyan]Enter your name for the leaderboard:[/bold cyan]
+(max 10 characters, press Enter to skip)
+            """, justify="center")
+            name = console.input("> ").strip()
+            if not name:
+                name = "Player"
+            else:
+                name = name[:10]
+            submit_score(name, score)
+
+            console.clear()
+            console.print(Panel(
+                f"\n\n[bold]Score:[/bold] {score}\n\n"
+                f"""
+Press [green]R[/green] to restart or [magenta]Q[/magenta] to quit.
+                """,
+                title="GAME OVER",
+                border_style="red",
+                width=50,
+                expand=False
+            ), justify="center")
+
+            with term.cbreak():
+                while True:
+                    key = term.inkey(timeout=0.5)
+                    if key:
+                        pressed = str(key).lower()
+                        if pressed == "q":
+                            console.clear()
+                            console.print("👋  Thanks for playing!\n")
+                            sys.exit()
+                        elif pressed == "r":
+                            restart_requested = True
+                            break
 
         if restart_requested:
             console.clear()
