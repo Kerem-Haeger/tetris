@@ -2,7 +2,12 @@ import copy
 import time
 from rich.panel import Panel
 from rich.layout import Layout
-from ui import render_board, render_next_panel, render_score_panel, render_controls_panel
+from user_interface import (
+    render_board,
+    render_next_panel,
+    render_score_panel,
+    render_controls_panel
+)
 from constants import BOARD_WIDTH, BOARD_HEIGHT, EMPTY
 
 
