@@ -1,3 +1,7 @@
+import random
+from constants import TETROMINOES, TETROMINO_EMOJIS, BOARD_WIDTH
+
+
 class Piece:
     def __init__(self, shape_name, shape, emoji):
         self.shape_name = shape_name
