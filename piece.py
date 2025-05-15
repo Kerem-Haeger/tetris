@@ -9,6 +9,7 @@ from constants import (
 
 
 class Piece:
+    """ Represents a Tetromino piece in the game. """
     def __init__(self, shape_name, shape, emoji):
         self.shape_name = shape_name
         self.shape = shape
