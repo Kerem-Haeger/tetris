@@ -1,13 +1,13 @@
-from rich.console import Console
-from rich.live import Live
-from rich.panel import Panel
-from rich.layout import Layout
-from blessed import Terminal
 import os
 import sys
 import time
 import random
 import copy
+from rich.console import Console
+from rich.live import Live
+from rich.panel import Panel
+from rich.layout import Layout
+from blessed import Terminal
 from highscores import get_high_scores, submit_score
 
 # Constants
@@ -105,6 +105,37 @@ class Piece:
                         return  # Invalid rotation, so cancel
 
         self.shape = rotated
+
+
+def show_welcome_screen():
+    console.clear()
+    welcome_text = """[bold magenta]
+Welcome to Tetris!
+[/bold magenta]
+
+[bold white]Controls:[/bold white]
+← Move Left
+→ Move Right
+↓ Soft Drop
+↑ Rotate
+Q Quit
+
+Press [bold green]Enter[/bold green] to begin...
+"""
+    console.print(Panel(
+        welcome_text,
+        title="TETRIS",
+        border_style="cyan",
+        width=60
+        ), justify="center")
+
+    # Wait for Enter key
+    with term.cbreak():
+        while True:
+            key = term.inkey()
+            if key.name == "KEY_ENTER":
+                console.clear()
+                break
 
 
 def new_random_piece():
@@ -250,7 +281,7 @@ def clear_lines(board, live, score, next_piece, high_scores_text):
     return new_board, lines_cleared
 
 
-def main():
+def game_logic():
     while True:  # Outer loop to support restarting the game
         board = create_board()
         score = 0
@@ -411,4 +442,10 @@ def main():
             break
 
 
-main()
+def main():
+    show_welcome_screen()
+    game_logic()
+
+
+if __name__ == "__main__":
+    main()
