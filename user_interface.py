@@ -41,7 +41,7 @@ Press [bold green]Enter[/bold green] to begin...
                 break
             elif str(key).lower() == "q":
                 console.clear()
-                console.print("👋 Thanks for playing!\n")
+                console.print("👋  Thanks for playing!\n")
                 sys.exit()
 
 

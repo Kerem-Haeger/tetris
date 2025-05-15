@@ -28,6 +28,7 @@ def game_logic():
         current_piece = new_random_piece()
         next_piece = new_random_piece()
         restart_requested = False
+        quit_requested = False  # NEW FLAG
 
         high_scores_text = get_high_scores()
 
@@ -43,7 +44,7 @@ def game_logic():
                     "KEY_DOWN",
                     "KEY_UP",
                     "q"
-                    )
+                )
                 start_time = time.time()
                 key = None
 
@@ -73,9 +74,8 @@ def game_logic():
                         current_piece.rotate(board)
 
                     elif str(key).lower() == "q":
-                        console.clear()
-                        console.print("👋 Thanks for playing!\n")
-                        sys.exit()
+                        quit_requested = True
+                        break  # Exit gameplay loop
 
                 # Apply gravity
                 if can_move(current_piece, board, dr=1):
@@ -151,6 +151,12 @@ def game_logic():
                     width=80,
                     border_style="dim")
                 )
+
+        # Handle early quit (skip score input and game over panel)
+        if quit_requested:
+            console.clear()
+            console.print("👋  Thanks for playing!\n")
+            sys.exit()
 
         # Prompt for name after game ends
         console.print("""
