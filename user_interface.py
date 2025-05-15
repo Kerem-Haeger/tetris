@@ -1,3 +1,4 @@
+import sys
 from rich.console import Console
 from rich.panel import Panel
 from blessed import Terminal
@@ -9,6 +10,7 @@ term = Terminal()
 
 
 def show_welcome_screen():
+    """ Display the welcome screen with game instructions and controls. """
     console.clear()
     welcome_text = """[bold magenta]
 Welcome to Tetris!
@@ -37,6 +39,10 @@ Press [bold green]Enter[/bold green] to begin...
             if key.name == "KEY_ENTER":
                 console.clear()
                 break
+            elif str(key).lower() == "q":
+                console.clear()
+                console.print("👋 Thanks for playing!\n")
+                sys.exit()
 
 
 def render_board(board):
