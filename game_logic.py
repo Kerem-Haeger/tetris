@@ -1,3 +1,4 @@
+import time
 import sys
 from rich.live import Live
 from rich.layout import Layout
@@ -35,27 +36,46 @@ def game_logic():
             refresh_per_second=10
         ) as live:
             while True:  # Inner game loop
-                key = term.inkey(timeout=tick_rate)
+                # Custom key poll loop
+                valid_keys = (
+                    "KEY_LEFT",
+                    "KEY_RIGHT",
+                    "KEY_DOWN",
+                    "KEY_UP",
+                    "q"
+                    )
+                start_time = time.time()
+                key = None
 
-                # Handle key input
-                if key.name == "KEY_LEFT":
-                    if can_move(current_piece, board, dr=0, dc=-1):
-                        current_piece.col -= 1
+                while time.time() - start_time < tick_rate:
+                    k = term.inkey(timeout=0.01)
+                    if not k:
+                        continue
+                    if k.name in valid_keys or str(k).lower() == "q":
+                        key = k
+                        break
 
-                elif key.name == "KEY_RIGHT":
-                    if can_move(current_piece, board, dr=0, dc=1):
-                        current_piece.col += 1
+                # Safely handle input
+                if key:
+                    if key.name == "KEY_LEFT":
+                        if can_move(current_piece, board, dr=0, dc=-1):
+                            current_piece.col -= 1
 
-                elif key.name == "KEY_DOWN":
-                    if can_move(current_piece, board, dr=1):
-                        current_piece.row += 1
+                    elif key.name == "KEY_RIGHT":
+                        if can_move(current_piece, board, dr=0, dc=1):
+                            current_piece.col += 1
 
-                elif key.name == "KEY_UP":
-                    current_piece.rotate(board)
+                    elif key.name == "KEY_DOWN":
+                        if can_move(current_piece, board, dr=1):
+                            current_piece.row += 1
 
-                elif key == "q":
-                    live.update(Panel(f"Quit! Final score: {score}"))
-                    return  # Exit the game
+                    elif key.name == "KEY_UP":
+                        current_piece.rotate(board)
+
+                    elif str(key).lower() == "q":
+                        console.clear()
+                        console.print("👋 Thanks for playing!\n")
+                        sys.exit()
 
                 # Apply gravity
                 if can_move(current_piece, board, dr=1):
@@ -83,7 +103,6 @@ def game_logic():
                     next_piece = new_random_piece()
 
                     if not can_move(current_piece, board, dr=0):
-                        # Display final Game Over panel
                         game_over_panel = Panel(
                             f"[bold red]Game Over![/bold red]\n"
                             f"[bold]Score:[/bold] {score}\n\n"
@@ -133,11 +152,11 @@ def game_logic():
                     border_style="dim")
                 )
 
-        # Prompt for name while leaderboard and game screen are still visible
+        # Prompt for name after game ends
         console.print("""
 \n[bold cyan]Enter your name for the leaderboard:[/bold cyan]
 (max 10 characters, or press Enter to skip)
-                    """)
+""")
         name = console.input("> ").strip()
         if not name:
             name = "Player"
@@ -146,7 +165,7 @@ def game_logic():
 
         submit_score(name, score)
 
-        # Now clear everything and show the nice Game Over panel
+        # Show clean game over screen with restart/quit
         console.clear()
         console.print(Panel(
             f"\n\n[bold]Score:[/bold] {score}\n\n"
@@ -173,6 +192,6 @@ def game_logic():
         if restart_requested:
             console.clear()
             high_scores_text = get_high_scores()
-            continue  # Restart outer loop
+            continue
         else:
             break
