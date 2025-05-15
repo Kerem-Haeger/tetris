@@ -16,6 +16,22 @@ from user_interface import (
     render_controls_panel, console, term
 )
 from highscores import get_high_scores, submit_score
+from constants import VALID_KEYS
+
+
+def handle_post_game_input():
+    with term.cbreak():
+        while True:
+            key = term.inkey(timeout=0.5)
+            if key:
+                key_str = str(key).lower()
+                if key_str == "q":
+                    console.clear()
+                    console.print("👋  Thanks for playing!\n")
+                    sys.exit()
+                elif key_str == "r":
+                    return True
+    return False
 
 
 def game_logic():
@@ -35,15 +51,8 @@ def game_logic():
         with term.cbreak(), Live(
             console=console,
             refresh_per_second=10
-                ) as live:
+        ) as live:
             while True:  # Inner game loop
-                valid_keys = (
-                    "KEY_LEFT",
-                    "KEY_RIGHT",
-                    "KEY_DOWN",
-                    "KEY_UP",
-                    "q"
-                )
                 start_time = time.time()
                 key = None
 
@@ -51,27 +60,32 @@ def game_logic():
                     k = term.inkey(timeout=0.01)
                     if not k:
                         continue
-                    if k.name in valid_keys or str(k).lower() == "q":
+                    key_name = k.name if hasattr(k, "name") else None
+                    key_str = str(k).lower()
+                    if key_name in VALID_KEYS or key_str == "q":
                         key = k
                         break
 
                 if key:
-                    if key.name == "KEY_LEFT":
+                    key_name = key.name if hasattr(key, "name") else None
+                    key_str = str(key).lower()
+
+                    if key_name == "KEY_LEFT":
                         if can_move(current_piece, board, dr=0, dc=-1):
                             current_piece.col -= 1
 
-                    elif key.name == "KEY_RIGHT":
+                    elif key_name == "KEY_RIGHT":
                         if can_move(current_piece, board, dr=0, dc=1):
                             current_piece.col += 1
 
-                    elif key.name == "KEY_DOWN":
+                    elif key_name == "KEY_DOWN":
                         if can_move(current_piece, board, dr=1):
                             current_piece.row += 1
 
-                    elif key.name == "KEY_UP":
+                    elif key_name == "KEY_UP":
                         current_piece.rotate(board)
 
-                    elif str(key).lower() == "q":
+                    elif key_str == "q":
                         quit_requested = True
                         break
 
@@ -100,18 +114,6 @@ def game_logic():
                     next_piece = new_random_piece()
 
                     if not can_move(current_piece, board, dr=0):
-                        game_over_panel = Panel(
-                            f"[bold red]Game Over![/bold red]\n\n"
-                            f"[bold]Score:[/bold] {score}\n\n"
-                            f"Would you like to record your score?\n\n"
-                            f"[bold cyan]Press Enter to save[/bold cyan], "
-                            f"""
-[green]R to restart[/green], or [magenta]Q to quit[/magenta]""",
-                            title="GAME OVER",
-                            border_style="red",
-                            width=50
-                        )
-                        live.update(game_over_panel)
                         break
 
                 temp_board = add_piece_to_board(current_piece, board)
@@ -156,12 +158,18 @@ def game_logic():
             console.print("👋  Thanks for playing!\n")
             sys.exit()
 
+        game_over_message = f"""
+        [bold]Score:[/bold] {score}
+
+Would you like to record your score?
+
+Press [bold cyan]Enter[/bold cyan] to save your score to the leaderboard,
+[green]R[/green] to restart, or [magenta]Q[/magenta] to quit
+"""
+
         console.clear()
         console.print(Panel(
-            f"[bold]Score:[/bold] {score}\n\n"
-            f"Would you like to record your score?\n\n"
-            f"[bold cyan]Press Enter to save[/bold cyan], "
-            f"[green]R to restart[/green], or [magenta]Q to quit[/magenta]",
+            game_over_message,
             title="GAME OVER",
             border_style="red",
             width=50,
@@ -175,14 +183,17 @@ def game_logic():
                 key = term.inkey(timeout=0.5)
                 if not key:
                     continue
-                if str(key).lower() == "q":
+                key_str = str(key).lower()
+                key_name = key.name if hasattr(key, "name") else None
+
+                if key_str == "q":
                     console.clear()
                     console.print("👋  Thanks for playing!\n")
                     sys.exit()
-                elif str(key).lower() == "r":
+                elif key_str == "r":
                     restart_requested = True
                     break
-                elif key.name == "KEY_ENTER":
+                elif key_name == "KEY_ENTER":
                     record_score = True
                     break
 
@@ -211,18 +222,8 @@ Press [green]R[/green] to restart or [magenta]Q[/magenta] to quit.
                 expand=False
             ), justify="center")
 
-            with term.cbreak():
-                while True:
-                    key = term.inkey(timeout=0.5)
-                    if key:
-                        pressed = str(key).lower()
-                        if pressed == "q":
-                            console.clear()
-                            console.print("👋  Thanks for playing!\n")
-                            sys.exit()
-                        elif pressed == "r":
-                            restart_requested = True
-                            break
+            if handle_post_game_input():
+                restart_requested = True
 
         if restart_requested:
             console.clear()

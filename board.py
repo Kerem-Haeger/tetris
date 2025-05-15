@@ -72,25 +72,29 @@ def clear_lines(board, live, score, next_piece, high_scores_text):
         for col in range(BOARD_WIDTH):
             temp_board[idx][col] = "[white]▓▓[/white]"
 
-            # Only the game board is changing
+            # Build panels only once per tick
             game_panel = Panel(
                 render_board(temp_board),
                 title="TETRIS",
                 border_style="bold red",
                 width=24
-                )
+            )
+            next_p = Layout(next_panel)
+            score_p = Layout(score_panel)
+            controls_p = Layout(controls_panel)
+            leaderboard_p = Layout(high_scores_panel)
 
             layout = Layout()
             layout.split_row(
                 Layout(game_panel, name="game", size=24),
-                Layout(name="sidebar")
+                Layout(name="sidebar", size=28),
+                Layout(leaderboard_p, name="leaderboard")
             )
 
             layout["sidebar"].split_column(
-                Layout(next_panel),
-                Layout(score_panel),
-                Layout(controls_panel),
-                Layout(high_scores_panel)
+                next_p,
+                score_p,
+                controls_p
             )
 
             live.update(Panel(layout, height=24, width=80, border_style="dim"))

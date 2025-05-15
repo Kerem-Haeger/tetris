@@ -45,3 +45,5 @@ TETROMINO_EMOJIS = (
     ["[red]▓▓[/red]", "[blue]▓▓[/blue]", "[yellow]▓▓[/yellow]",
         "[green]▓▓[/green]", "[magenta]▓▓[/magenta]", "[cyan]▓▓[/cyan]"]
 )
+
+VALID_KEYS = ("KEY_LEFT", "KEY_RIGHT", "KEY_DOWN", "KEY_UP", "q")
