@@ -211,9 +211,12 @@ Press [bold cyan]Enter[/bold cyan] to save your score to the leaderboard,
             submit_score(name, score)
 
             console.clear()
-            console.print(Panel(
-                f"\n\n[bold]Score:[/bold] {score}\n\n"
-                f"""
+            console.print(Panel(f"""
+[bold]Your score has been recorded![/bold]
+
+[bold]Score:[/bold] {score}
+
+
 Press [green]R[/green] to restart or [magenta]Q[/magenta] to quit.
                 """,
                 title="GAME OVER",
