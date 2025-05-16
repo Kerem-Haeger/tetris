@@ -27,12 +27,16 @@ def get_high_scores(limit=10):
 
     sorted_scores = sorted(
         records,
-        key=lambda r: int(r.get("Score", 0)) if str(r.get("Score", "")).isdigit() else 0,
+        key=lambda r: (
+            int(r.get("Score", 0))
+            if str(r.get("Score", "")).isdigit()
+            else 0
+        ),
         reverse=True
     )
     top_scores = sorted_scores[:limit]
 
-    lines = []
+    lines = [""]
     for i, entry in enumerate(top_scores, 1):
         name = entry.get("Name", "Anon")
         score = entry.get("Score", 0)
