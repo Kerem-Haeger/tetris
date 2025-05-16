@@ -227,11 +227,11 @@ Press [bold cyan]Enter[/bold cyan] to save your score to the leaderboard,
 
 Press [green]R[/green] to restart or [magenta]Q[/magenta] to quit.
                 """,
-                title="GAME OVER",
-                border_style="red",
-                width=50,
-                expand=False
-            ), justify="center")
+                                title="GAME OVER",
+                                border_style="red",
+                                width=50,
+                                expand=False
+                                ), justify="center")
 
             if handle_post_game_input():
                 restart_requested = True
