@@ -49,7 +49,7 @@ def render_board(board):
     """
     Convert the board's 2D array into a string representation for display.
     """
-    return "\n".join("".join(row) for row in board)
+    return "\n".join("".join(str(cell) for cell in row) for row in board)
 
 
 def render_next_piece(piece):
