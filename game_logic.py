@@ -200,8 +200,8 @@ Press [bold cyan]Enter[/bold cyan] to save your score to the leaderboard,
         if record_score:
             console.clear()
             console.print("""
-[bold cyan]Enter your name for the leaderboard:[/bold cyan]
-(max 10 characters, press Enter to skip)
+[bold cyan]Enter a username for the leaderboard:[/bold cyan]
+(max 10 characters, or press [cyan]Enter[/cyan] to skip)
             """, justify="center")
             name = console.input("> ").strip()
             if not name:
