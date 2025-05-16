@@ -159,7 +159,7 @@ def game_logic():
             sys.exit()
 
         game_over_message = f"""
-        [bold]Score:[/bold] {score}
+[bold]Score:[/bold] {score}
 
 Would you like to record your score?
 
