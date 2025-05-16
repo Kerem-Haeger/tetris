@@ -20,6 +20,10 @@ from constants import VALID_KEYS
 
 
 def handle_post_game_input():
+    """
+    Waits for user input after the game ends and handles restart or quit
+    commands.
+    """
     with term.cbreak():
         while True:
             key = term.inkey(timeout=0.5)
@@ -35,6 +39,10 @@ def handle_post_game_input():
 
 
 def game_logic():
+    """
+    Main game loop that handles Tetris gameplay, user input, rendering,
+    score tracking, level progression, and game over behavior.
+    """
     while True:  # Outer loop to support restarting the game
         board = create_board()
         score = 0
