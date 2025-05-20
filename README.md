@@ -108,6 +108,7 @@ Despite the absence of a graphical window, the game remains engaging, responsive
 
 - The player can choose to view the leaderboard, which will display the 20 highest scores currently recorded.
 ![Leaderboard](documentation/features/leaderboard.png)
+
 *The scores visible were from testing, and have been cleared for deployment*
 
 ---
@@ -243,8 +244,8 @@ Overall, the architecture supports a clean development workflow, real-time termi
 - `random`: Used for selecting random Tetromino shapes and colors.
 - `time`: Used to control game speed and frame timing.
 - `os`: Used to detect the platform (Heroku vs. local) and adjust rendering accordingly.
-- `copy` — to create deep copies of the board for safe rendering without mutating the game state.
-- `sys` — to cleanly exit the program when the user chooses to quit.
+- `copy`: to create deep copies of the board for safe rendering without mutating the game state.
+- `sys`: to cleanly exit the program when the user chooses to quit.
 
 #### Third-Party Libraries
 
@@ -323,6 +324,15 @@ This project was deployed using GitHub integration in Heroku and follows the sta
 
 > These are the steps used to deploy the project via Heroku using GitHub integration.
 
+> ⚠️ This project uses both the **Google Sheets API** and the **Google Cloud API** to support leaderboard functionality.  
+> To enable this feature when deploying the project yourself, you must:
+>
+> - Create your own Google Sheet to store scores
+> - Set up a Google project via [Google Cloud Console](https://console.cloud.google.com/)
+> - Enable the **Google Sheets API** and **Google Drive API** for that project
+> - Create a **Service Account** and download the `creds.json` file
+> - Share your Google Sheet with the generated service account email (e.g. `your-service-account@your-project.iam.gserviceaccount.com`)
+
 1. Log in to [Heroku Dashboard](https://dashboard.heroku.com) and create a new app.
 
 2. Under the **Deploy** tab:
@@ -394,15 +404,6 @@ To run Terminal Tetris locally:
 6. Run the game:
     ```bash
     python run.py
-
-> ⚠️ This project uses both the **Google Sheets API** and the **Google Cloud API** to support leaderboard functionality.  
-> To enable this feature when deploying the project yourself, you must:
->
-> - Create your own Google Sheet to store scores
-> - Set up a Google project via [Google Cloud Console](https://console.cloud.google.com/)
-> - Enable the **Google Sheets API** and **Google Drive API** for that project
-> - Create a **Service Account** and download the `creds.json` file
-> - Share your Google Sheet with the generated service account email (e.g. `your-service-account@your-project.iam.gserviceaccount.com`)
 
 
 ## Credits
