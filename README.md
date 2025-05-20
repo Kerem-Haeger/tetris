@@ -358,3 +358,26 @@ To run Terminal Tetris locally:
     ```bash
     python run.py
 
+
+## Credits
+
+### Libraries & Tools
+
+- [Rich (Textualize)](https://rich.readthedocs.io/en/stable/) — for styled terminal output, panels, and text formatting.
+- [Blessed](https://blessed.readthedocs.io/en/latest/) — for real-time key detection and terminal control handling.
+- [Prompt Toolkit](https://python-prompt-toolkit.readthedocs.io/en/master/) — for interactive, validated text input.
+- [Gspread](https://docs.gspread.org/) — for accessing and modifying Google Sheets via API.
+- [Google Auth (google-auth)](https://googleapis.github.io/google-auth-library-python/latest/) — for secure authentication with Google services.
+
+### Educational Resources
+
+- [Code Institute](https://codeinstitute.net/) — for the deployment boilerplate and course structure.
+- [Textualize Blog](https://www.textualize.io/blog/) — for examples and insights into terminal UI design with Rich.
+- [YouTube](https://www.youtube.com/) — for tutorials related to Python game development, terminal UX, and various dependencies.
+
+### Acknowledgements
+
+- Thanks to peer testers who provided feedback across Windows, macOS, and Heroku platforms.
+- Special appreciation to the open-source community whose tools and documentation made this project possible.
+- A special thanks to my Mentor [Iuliia Konovalova](https://github.com/IuliiaKonovalova), for the guidance throughout this project, as well as reminding me to follow best practices!
+- The Google Sheets authentication code structure in `highscores.py` was adapted from the Code Institute "Love Sandwiches" walkthrough project.
