@@ -76,11 +76,11 @@ def run_game_loop():
                                                     ):
                     current_piece.col -= 1
                 elif key_name == "KEY_RIGHT" and can_move(
-                                                            current_piece,
-                                                            board,
-                                                            dr=0,
-                                                            dc=1
-                                                            ):
+                                                        current_piece,
+                                                        board,
+                                                        dr=0,
+                                                        dc=1
+                                                        ):
                     current_piece.col += 1
                 elif key_name == "KEY_DOWN" and can_move(
                                                         current_piece,
@@ -146,27 +146,41 @@ def run_game_loop():
 
 def post_game_prompt(score):
     """
-    Handles the game over screen and input
-    for score saving or restarting.
+    Handles the game over screen and input for
+    score saving or restarting.
     """
-    console.clear()
-    console.print(Panel(
-        f"""
+    leaderboard_visible = False
+
+    while True:
+        console.clear()
+        if leaderboard_visible:
+            high_scores_text = get_high_scores(limit=20, two_columns=True)
+            console.print(Panel(
+                high_scores_text,
+                title="LEADERBOARD",
+                border_style="blue",
+                width=50,
+                expand=False
+            ), justify="center")
+            console.print("\nPress [bold cyan]L[/bold cyan] to return.", justify="center")
+        else:
+            console.print(Panel(
+                f"""
 [bold]Score:[/bold] {score}
 
 Would you like to record your score?
 
 Press [bold cyan]Enter[/bold cyan] to save your score to the leaderboard,
-[green]R[/green] to restart, or [magenta]Q[/magenta] to quit.
-        """,
-        title="GAME OVER",
-        border_style="red",
-        width=50,
-        expand=False
-    ), justify="center")
+[green]R[/green] to restart, [magenta]Q[/magenta] to quit,
+or [blue]L[/blue] to view leaderboard.
+                """,
+                title="GAME OVER",
+                border_style="red",
+                width=50,
+                expand=False
+            ), justify="center")
 
-    with term.cbreak():
-        while True:
+        with term.cbreak():
             key = term.inkey(timeout=0.5)
             if not key:
                 continue
@@ -181,8 +195,8 @@ Press [bold cyan]Enter[/bold cyan] to save your score to the leaderboard,
                 return False, True  # no score save, restart
             elif key_name == "KEY_ENTER":
                 return True, False  # save score, do not restart
-
-    return False, False
+            elif key_str == "l":
+                leaderboard_visible = not leaderboard_visible
 
 
 def handle_score_submission(score):
