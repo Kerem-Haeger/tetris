@@ -64,22 +64,22 @@ Screenshots were taken to demonstrate both the successful validation **and** the
 ### Validation Results
 
 - **run.py**  
-  ![Validator Screenshot](documentation/pep8_validator/validator_run_file.png)
+  ![Validator Screenshot](documentation/validator/run_validator.png)
 
 - **game_logic.py**  
-  ![Validator Screenshot](documentation/pep8_validator/validator_game_logic_file.png)
+  ![Validator Screenshot](documentation/validator/game_logic_validator.png)
 
 - **piece.py**  
-  ![Validator Screenshot](documentation/pep8_validator/validator_piece_file.png)
+  ![Validator Screenshot](documentation/validator/piece_validator.png)
 
 - **board.py**  
-  ![Validator Screenshot](documentation/pep8_validator/validator_board_file.png)
+  ![Validator Screenshot](documentation/validator/board_validator.png)
 
 - **user_interface.py**  
-  ![Validator Screenshot](documentation/pep8_validator/validator_user_interface_file.png)
+  ![Validator Screenshot](documentation/validator/user_interface_validator.png)
 
 - **highscores.py**  
-  ![Validator Screenshot](documentation/pep8_validator/validator_highscores_file.png)
+  ![Validator Screenshot](documentation/validator/highscores_validator.png)
 
 - **constants.py**  
-  ![Validator Screenshot](documentation/pep8_validator/validator_constants_file.png)
+  ![Validator Screenshot](documentation/validator/constants_validator.png)
