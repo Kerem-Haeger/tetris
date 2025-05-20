@@ -53,7 +53,6 @@ Despite the absence of a graphical window, the game remains engaging, responsive
 
 - When the game launches, users are greeted with a colorful welcome screen rendered using the Rich library.
 - Instructions and controls are displayed clearly with styled arrow keys and color-coded options.
-
 ![Welcome Screen](documentation/features/introduction_screen.png)
 
 ---
