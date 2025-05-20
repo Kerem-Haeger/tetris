@@ -60,6 +60,7 @@ def run_game_loop():
     score tracking, level progression, and game over behavior.
     Returns the final score and whether the user requested to quit.
     """
+    console.clear()  # Safeguard to clear screen before starting
     board = create_board()
     score = 0
     level = 1
