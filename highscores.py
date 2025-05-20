@@ -23,7 +23,11 @@ def get_high_scores(limit=10, two_columns=False):
     records = SCORES_SHEET.get_all_records()
     sorted_scores = sorted(
         records,
-        key=lambda r: int(r.get("Score", 0)) if str(r.get("Score", "")).isdigit() else 0,
+        key=lambda r: (
+            int(r.get("Score", 0))
+            if str(r.get("Score", "")).isdigit()
+            else 0
+        ),
         reverse=True
     )
     top_scores = sorted_scores[:limit]
@@ -45,8 +49,16 @@ def get_high_scores(limit=10, two_columns=False):
     for i in range(len(column_1)):
         left = column_1[i]
         right = column_2[i] if i < len(column_2) else {"Name": "", "Score": ""}
-        left_text = f"{i+1}. {left.get('Name', 'Anon'):<10} {left.get('Score', 0)}"
-        right_text = f"{i+1+limit//2}. {right.get('Name', 'Anon'):<10} {right.get('Score', 0)}"
+        left_text = (
+            f"{i+1}. "
+            f"{left.get('Name', 'Anon'):<10} "
+            f"{left.get('Score', 0)}"
+        )
+        right_text = (
+            f"{i+1 + limit // 2}. "
+            f"{right.get('Name', 'Anon'):<10} "
+            f"{right.get('Score', 0)}"
+        )
         lines.append(f"{left_text:<25} {right_text}")
     return "\n".join(lines)
 

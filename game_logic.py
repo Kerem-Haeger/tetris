@@ -165,7 +165,10 @@ def post_game_prompt(score):
                     width=50,
                     expand=False
                 ), justify="center")
-                console.print("\nPress [bold cyan]L[/bold cyan] to return.", justify="center")
+                console.print(
+                    "\nPress [bold cyan]L[/bold cyan] to return.",
+                    justify="center"
+                    )
             else:
                 console.print(Panel(
                     f"""
@@ -204,7 +207,7 @@ or [blue]L[/blue] to view leaderboard.
 
 
 def handle_score_submission(score):
-    """Prompts for name and submits score."""
+    """Prompts for name, submits score, and handles post-save actions."""
     console.clear()
     console.print("""
 [bold cyan]Enter a username for the leaderboard:[/bold cyan]
@@ -217,25 +220,57 @@ def handle_score_submission(score):
         name = name[:10]
     submit_score(name, score)
 
-    console.clear()
-    console.print(
-        Panel(
-            f"""
+    leaderboard_visible = False
+    previous_state = None
+
+    while True:
+        if leaderboard_visible != previous_state:
+            console.clear()
+            if leaderboard_visible:
+                high_scores_text = get_high_scores(limit=20, two_columns=True)
+                console.print(Panel(
+                    high_scores_text,
+                    title="LEADERBOARD",
+                    border_style="blue",
+                    width=50,
+                    expand=False
+                ), justify="center")
+                console.print(
+                    "\nPress [bold cyan]L[/bold cyan] to return.",
+                    justify="center"
+                    )
+            else:
+                console.print(
+                    Panel(
+                        f"""
 [bold]Your score has been recorded![/bold]
 
 [bold]Score:[/bold] {score}
 
-Press [green]R[/green] to restart or [magenta]Q[/magenta] to quit.
-            """,
-            title="GAME OVER",
-            border_style="red",
-            width=50,
-            expand=False
-        ),
-        justify="center"
-    )
+Press [green]R[/green] to restart, [magenta]Q[/magenta] to quit,
+or [blue]L[/blue] to view the leaderboard.
+                        """,
+                        title="GAME OVER",
+                        border_style="red",
+                        width=50,
+                        expand=False
+                    ),
+                    justify="center"
+                )
+            previous_state = leaderboard_visible
 
-    return handle_post_game_input()
+        with term.cbreak():
+            key = term.inkey(timeout=0.5)
+            if key:
+                key_str = str(key).lower()
+                if key_str == "r":
+                    return True
+                elif key_str == "q":
+                    console.clear()
+                    console.print("👋  Thanks for playing!\n")
+                    sys.exit()
+                elif key_str == "l":
+                    leaderboard_visible = not leaderboard_visible
 
 
 def game_logic():
