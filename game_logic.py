@@ -71,7 +71,11 @@ def run_game_loop():
     quit_requested = False
     high_scores_text = get_high_scores()
 
-    with term.cbreak(), Live(console=console, refresh_per_second=10) as live:
+    with term.cbreak(), Live(
+                            console=console,
+                            refresh_per_second=10,
+                            transient=True
+                            ) as live:
         while True:
             start_time = time.time()
             key = None
