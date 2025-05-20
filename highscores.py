@@ -47,9 +47,7 @@ def get_high_scores(limit=10):
 
 
 def submit_score(name, score):
-    """
-    Adds a new row to the Scores sheet.
-    """
+    """ Adds a new row to the Scores sheet. """
     try:
         SCORES_SHEET.append_row([name, int(score)])
     except Exception as e:

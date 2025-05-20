@@ -13,14 +13,16 @@ from constants import BOARD_WIDTH, BOARD_HEIGHT, EMPTY
 
 def create_board():
     """
-    Create and return an empty game board with predefined width and height.
+    Create and return an empty game board
+    with predefined width and height.
     """
     return [[EMPTY for _ in range(BOARD_WIDTH)] for _ in range(BOARD_HEIGHT)]
 
 
 def can_move(piece, board, dr=1, dc=0):
     """
-    Check if a piece can move in the specified direction without collisions.
+    Check if a piece can move in the specified
+    direction without collisions.
     """
     for r, c in piece.get_coords():
         nr, nc = r + dr, c + dc
