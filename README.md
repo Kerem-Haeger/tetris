@@ -120,6 +120,97 @@ It illustrates how the game interacts with user input (movement, rotation, quit)
 ![Terminal Tetris Flowchart](documentation/flowchart.png)
 
 
+## Class Design: `Piece` and `MaxLengthValidator`
+
+### `Piece` Class (in `piece.py`)
+
+The `Piece` class represents a falling Tetris piece (Tetromino). It encapsulates all logic related to its shape, position, and rotation:
+
+- `shape_name`: The identifier for the piece type (e.g. "T", "L", etc.).
+- `shape`: A 2D list representing the block layout.
+- `emoji`: The character used to draw the piece (emoji or block, depending on terminal compatibility).
+- `row`, `col`: The current position of the piece on the board.
+
+#### Key Method Highlights:
+
+- **`get_coords()`**  
+  Calculates and returns the piece’s occupied positions on the board.
+
+- **`rotate(board)`**  
+  Attempts to rotate the piece clockwise. The rotation is only applied if it doesn’t result in a collision or out-of-bounds error.
+
+- The class is used alongside a helper function `new_random_piece()` to spawn a new piece with a random shape and emoji color.
+
+---
+
+### `MaxLengthValidator` Class (in `game_logic.py`)
+
+This class inherits from `prompt_toolkit.validation.Validator` and ensures that leaderboard names are no longer than 10 characters.
+
+- It checks the input string length and raises a `ValidationError` if the limit is exceeded.
+- This class enhances user experience by providing immediate and styled feedback within the terminal input field.
+
+---
+
+## Architecture & Module Justification
+
+The project follows a modular architecture, where each Python file handles a specific responsibility. This separation ensures maintainability, clarity, and alignment with OOP and clean code principles.
+
+### Module Overview
+
+- **`run.py`**  
+  The main entry point of the program. It calls the welcome screen and then starts the game loop. This keeps startup logic clean and isolated from the gameplay code.
+
+- **`game_logic.py`**  
+  This is the central hub of the gameplay. It manages the core loop, user inputs, piece updates, rendering coordination, and game state transitions (e.g., game over, restarting, saving scores).  
+  It also includes the `MaxLengthValidator` class for limiting leaderboard name input.
+
+- **`piece.py`**  
+  Contains the `Piece` class, which models each Tetromino's position, shape, rotation, and appearance.  
+  Includes `new_random_piece()` to spawn a random piece using data from the `constants` module.
+
+- **`board.py`**  
+  Manages the game board — a 2D grid of cells. Provides functions to:
+  - Check valid movement (`can_move`)
+  - Lock pieces to the board (`lock_piece`)
+  - Render temporary positions (`add_piece_to_board`)
+  - Animate and clear completed lines (`clear_lines`)
+
+- **`user_interface.py`**  
+  Handles all terminal output using `rich` and `blessed`. This includes:
+  - The welcome screen
+  - Drawing the game board and next piece
+  - Creating side panels for score and controls
+  It keeps all visual logic separated from game logic.
+
+- **`highscores.py`**  
+  Manages all leaderboard functionality via `gspread` and Google Sheets:
+  - Fetches and formats high scores (single or dual-column display)
+  - Submits a new score when a user enters their name after the game
+  All spreadsheet access and formatting are neatly encapsulated in this file.
+
+- **`constants.py`**  
+  Centralizes all constants and configuration:
+  - Board dimensions and game speed
+  - Tetromino shapes and block styles
+  - Emoji vs fallback blocks (adjusted via `IS_HEROKU` environment variable)
+  - Valid input keys for gameplay
+  This file helps make the game configurable and Heroku-compatible without cluttering logic files.
+
+---
+
+This structure allows each module to focus on a single task:
+
+- **Gameplay logic** stays in `game_logic.py`.
+- **UI rendering** is managed entirely by `user_interface.py`.
+- **Board and piece management** are abstracted into `board.py` and `piece.py`.
+- **Persistent data (scores)** is handled in `highscores.py`.
+
+This not only improves clarity and testability but also makes the project scalable — for example, adding a new piece type, UI enhancement, or leaderboard feature can be done without disrupting the entire codebase.
+
+Overall, the architecture supports a clean development workflow, real-time terminal gameplay, and deployability to cloud platforms like Heroku.
+
+
 ## Technologies Used
 
 ### Languages
