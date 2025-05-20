@@ -69,6 +69,7 @@ Despite the absence of a graphical window, the game remains engaging, responsive
 - Real-time rendering is handled with `blessed`, keeping the experience smooth and responsive.
 
 ![Game Interface on Heroku](documentation/features/game_heroku.png)
+
 *Game interface viewed through Heroku*
 
 ![Game Interface in Terminal](documentation/features/game_terminal.png)
@@ -97,15 +98,12 @@ Despite the absence of a graphical window, the game remains engaging, responsive
 - When the game ends, players are prompted to enter a name (max 10 characters).
 - Input is handled using `prompt_toolkit` for clean, styled input.
 - Players can skip this step or save their score to a leaderboard.
-
 ![Leaderboard Prompt](documentation/features/enter_name.png)
-*The user is prompted to enter a name, if skipped "Player" is the default name*
-
+*The user is prompted to enter a name, if skipped ,"Player" is the default name*
 ![Leaderboard Prompt Warning](documentation/features/warning_enter_name.png)
 *Should the name be longer than 10 characters, a warning shows, and the user is prevented from pressing Enter*
 
 - The player can choose to view the leaderboard, which will display the 20 highest scores currently recorded.
-
 ![Leaderboard](documentation/features/leaderboard.png)
 *The scores visible were from testing, and have been cleared for deployment*
 
@@ -119,10 +117,8 @@ Despite the absence of a graphical window, the game remains engaging, responsive
   - Quit the application
   - View the leaderboard
 - The game handles invalid input and gently guides the user to make a selection.
-
 ![Game Over Menu](documentation/features/game_over_before.png)
 *Just after the game ends, the user can choose to enter a username*
-
 ![Game Over Menu After](documentation/features/game_over_after.png)
 *If a username is entered, the user is presented with the remaining options*
 
@@ -232,8 +228,6 @@ Overall, the architecture supports a clean development workflow, real-time termi
 ### Languages
 
 - [Python 3](https://www.python.org/): Main programming language used to build the game logic and terminal interface.
-- [JavaScript](https://developer.mozilla.org/en-US/docs/Web/JavaScript): Required for Heroku’s terminal emulation (via Code Institute’s mock terminal setup).
-- [HTML](https://developer.mozilla.org/en-US/docs/Web/HTML): Used in the deployed environment for the terminal interface wrapper.
 
 ### Python Libraries and Modules
 
