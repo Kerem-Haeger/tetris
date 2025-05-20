@@ -370,7 +370,7 @@ This project was deployed using GitHub integration in Heroku and follows the sta
 ![Heroku Deployment](documentation/deployment/heroku_deploy_manual_automatic.png)
 ![Heroku Deployment Progress](documentation/deployment/heroku_progress.png)
 
-6. Once deployment is successful, click **Open App** to launch the game in the browser.
+6. Once deployment is successful, click **View** to launch the game in the browser.
 ![Heroku View](documentation/deployment/heroku_view.png)
 
 ---
