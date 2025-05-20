@@ -60,7 +60,6 @@ def run_game_loop():
     score tracking, level progression, and game over behavior.
     Returns the final score and whether the user requested to quit.
     """
-    console.clear()  # Safeguard to clear screen before starting
     board = create_board()
     score = 0
     level = 1
@@ -71,11 +70,7 @@ def run_game_loop():
     quit_requested = False
     high_scores_text = get_high_scores()
 
-    with term.cbreak(), Live(
-                            console=console,
-                            refresh_per_second=10,
-                            transient=True
-                            ) as live:
+    with term.cbreak(), Live(console=console, refresh_per_second=10) as live:
         while True:
             start_time = time.time()
             key = None

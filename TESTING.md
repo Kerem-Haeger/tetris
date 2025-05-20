@@ -97,3 +97,11 @@ This is a known limitation of Heroku’s web-based terminal and not a bug in the
 - Re-run the application using the **Run Program** button
 - Alternatively, clone the repository and run it locally for a more stable experience
 
+### Known Issue: Display Issue on Heroku
+
+When restarting the game (e.g., after pressing `R`), Heroku’s web-based terminal may render leftover border lines above the game interface.
+
+This does **not** affect gameplay, logic, or functionality, and does **not occur** when running the game locally in a standard terminal (e.g., Windows Terminal, macOS Terminal, or VS Code).
+
+The issue is due to Heroku's terminal emulator not fully clearing the screen between redraws — a known limitation with dynamic terminal applications using Rich or similar libraries.
+
