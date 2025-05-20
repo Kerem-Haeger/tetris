@@ -110,6 +110,7 @@ Despite the absence of a graphical window, the game remains engaging, responsive
 
 ![Game Over Menu](documentation/features/game_over_menu.png)
 
+
 ## Flowchart
 
 The following flowchart represents the core logic of the Terminal Tetris application, from initial launch to game over and score submission.
@@ -117,3 +118,143 @@ The following flowchart represents the core logic of the Terminal Tetris applica
 It illustrates how the game interacts with user input (movement, rotation, quit), score updates, row clearing, and end-game options like restarting or submitting to the leaderboard.
 
 ![Terminal Tetris Flowchart](documentation/flowchart.png)
+
+
+## Technologies Used
+
+### Languages
+
+- [Python 3](https://www.python.org/): Main programming language used to build the game logic and terminal interface.
+- [JavaScript](https://developer.mozilla.org/en-US/docs/Web/JavaScript): Required for Heroku’s terminal emulation (via Code Institute’s mock terminal setup).
+- [HTML](https://developer.mozilla.org/en-US/docs/Web/HTML): Used in the deployed environment for the terminal interface wrapper.
+
+### Python Libraries and Modules
+
+#### Standard Library Imports
+
+- `random`: Used for selecting random Tetromino shapes and colors.
+- `time`: Used to control game speed and frame timing.
+- `os`: Used to detect the platform (Heroku vs. local) and adjust rendering accordingly.
+
+#### Third-Party Libraries
+
+- [rich](https://github.com/Textualize/rich): Used for colorful terminal output, block styling, and visual UI elements (e.g., score, instructions).
+- [blessed](https://pypi.org/project/blessed/): Handles real-time keyboard input and terminal screen updates.
+- [prompt_toolkit](https://python-prompt-toolkit.readthedocs.io/en/master/): Used for styled and user-friendly input when entering usernames for the leaderboard.
+- [gspread](https://docs.gspread.org/): Connects to Google Sheets for saving and retrieving leaderboard scores.
+- [google-auth](https://pypi.org/project/google-auth/): Handles authentication to securely access Google Sheets.
+
+### Tools
+
+- [VS Code](https://code.visualstudio.com/): Used for writing, testing, and organizing code.
+- [Git](https://git-scm.com/): Used for version control throughout development.
+- [GitHub](https://github.com/): Hosted the project repository and deployment pipeline.
+
+### Deployment
+
+- [Heroku](https://heroku.com): Used to deploy the terminal-based application online, allowing users to play directly in the browser.
+- [draw.io](https://draw.io) / [Lucidchart](https://www.lucidchart.com/): Used to create the flowchart included in the README.
+
+
+## Bugs
+
+### Solved Bugs
+
+1. **Heroku Compatibility with Emoji Rendering**
+   - **Issue:** Emoji blocks (🟥, 🟦, etc.) rendered incorrectly in the Heroku terminal.
+   - **Solution:** Used `os.name` and platform detection to switch to simpler characters (like `▓`) when running on Heroku.
+
+2. **Username Input Too Long**
+   - **Issue:** Users could enter more than 10 characters for leaderboard names.
+   - **Solution:** Input is now programmatically truncated to 10 characters. A visual warning informs users of the limit.
+
+3. **Duplicate Game Over Trigger**
+   - **Issue:** The game over logic was firing more than once, causing visual or logical glitches in score submission.
+   - **Solution:** Added a safeguard to ensure the game over sequence can only be triggered once per session.
+
+4. **Unintended Key ("4") Was Speeding Up the Piece**
+   - **Issue:** Pressing certain number keys (e.g., "4") unintentionally triggered downward movement.
+   - **Solution:** Implemented a strict `VALID_KEYS` check to ignore all unintended input and only respond to defined arrow keys.
+
+5. **Leaderboard Input Misalignment**
+   - **Issue:** User input for the leaderboard was not well-aligned or styled on different terminal sizes.
+   - **Solution:** Replaced basic input with `prompt_toolkit` for consistent, styled, and center-aligned user prompts.
+
+### Unsolved Bugs
+
+- **Piece movement speeds up when holding left or right**
+  - **Issue:** Holding the left or right arrow key increases the falling speed of the current piece, similar to holding the down arrow.
+  - **Reason for not fixing:** This behavior is due to how key events are handled in the terminal. Fixing it would require complex asynchronous input tracking or threading, which is not justified for the scope of this project. It doesn't break the game and is minor in gameplay impact.
+
+
+## Testing
+
+Please refer to the [TESTING.md](TESTING.md) file for detailed testing and validation documentation.
+
+
+## Deployment
+
+### Live Deployment (Heroku)
+
+Terminal Tetris is deployed using [Heroku](https://heroku.com/) with the Code Institute Python template.
+
+You can play the game here:  
+[https://tetris-kh-c29675af7f73.herokuapp.com/](https://tetris-kh-c29675af7f73.herokuapp.com/)
+
+### Steps to Deploy on Heroku
+
+1. Fork or clone the repository from GitHub.
+2. Create a new app on [Heroku Dashboard](https://dashboard.heroku.com/).
+3. In the **Deploy** tab:
+   - Connect your Heroku app to your GitHub repository.
+   - Enable **automatic deploys** or click **"Deploy Branch"** manually.
+
+4. In the **Settings** tab:
+   - Click **“Reveal Config Vars”** and add the following:
+     - `PORT` → `8000`
+     - `GOOGLE_SHEETS_CREDS` → *Your base64-encoded credentials or a JSON string as required by gspread*
+
+5. Still under **Settings**, add the following **buildpacks** in this order:
+   - `heroku/python`
+   - `heroku/nodejs`
+
+6. Make sure the following files exist in your repo root:
+   - `run.py`
+   - `requirements.txt`
+   - `Procfile`
+   - `runtime.txt`
+
+7. Once deployed, click **"Open App"** to launch the terminal interface in your browser.
+
+---
+
+### Run Locally
+
+To run Terminal Tetris locally:
+
+1. Ensure you have Python 3 installed:
+    ```bash
+   python3 --version
+
+2. Clone the repository:
+    ```bash
+    git clone https://github.com/your-username/terminal-tetris.git
+    cd terminal-tetris
+
+3. (Optional) Create and activate a virtual environment:
+    ```bash
+    python3 -m venv venv
+    source venv/bin/activate  # On Windows: venv\Scripts\activate
+
+4. Install the dependencies:
+    ```bash
+    pip install -r requirements.txt
+
+5. Set up Google Sheets credentials:
+    - Provide a valid creds.json file or use an environment variable                (GOOGLE_SHEETS_CREDS) for access.
+    - If running locally, place your credentials file in the project directory as creds.json.
+
+6. Run the game:
+    ```bash
+    python run.py
+
