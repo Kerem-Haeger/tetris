@@ -329,14 +329,12 @@ This project was deployed using GitHub integration in Heroku and follows the sta
    - Choose **GitHub** as the deployment method.
    - Connect your GitHub account and search for your repository.
    - Click **Connect**.
-
-![Heroku Connection](documentation/deployment/heroku_connect.png)
+    ![Heroku Connection](documentation/deployment/heroku_connect.png)
 
 3. Under the **Settings** tab:
 ![Heroku Settings](documentation/deployment/heroku_settings.png)
 
    - Click **Reveal Config Vars** and add the following:
-
 ![Heroku Reveal](documentation/deployment/heroku_reveal_config_vars.png)
 
 | Key     | Value                                                               |
@@ -352,14 +350,12 @@ This project was deployed using GitHub integration in Heroku and follows the sta
 4. Add the required **Buildpacks** in this order:
    1. **Python**
    2. **Node.js**
-
 ![Heroku Buildpacks](documentation/deployment/heroku_buildpacks.png)
 
 5. Return to the **Deploy** tab:
    - Select your main branch.
    - Click **Enable Automatic Deploys** (optional).
    - Click **Deploy Branch** to trigger the build.
-
 ![Heroku Deployment](documentation/deployment/heroku_deploy_manual_automatic.png)
 
 6. Once deployment is successful, click **Open App** to launch the game in the browser.
