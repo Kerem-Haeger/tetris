@@ -398,3 +398,8 @@ To run Terminal Tetris locally:
 - Special appreciation to the open-source community whose tools and documentation made this project possible.
 - A special thanks to my Mentor [Iuliia Konovalova](https://github.com/IuliiaKonovalova), for the guidance throughout this project, as well as reminding me to follow best practices!
 - The Google Sheets authentication code structure in `highscores.py` was adapted from the Code Institute "Love Sandwiches" walkthrough project.
+
+
+## License
+
+This project is licensed under the [MIT License](https://opensource.org/licenses/MIT).
