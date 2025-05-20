@@ -83,3 +83,17 @@ Screenshots were taken to demonstrate both the successful validation **and** the
 
 - **constants.py**  
   ![Validator Screenshot](documentation/validator/constants_validator.png)
+
+
+---
+
+### Known Issue: Heroku Terminal Key Input
+
+Occasionally, key bindings may stop responding or behave inconsistently when the game is run via Heroku’s built-in terminal emulator.
+
+This is a known limitation of Heroku’s web-based terminal and not a bug in the game logic. If this happens:
+
+- Try refreshing the Heroku page
+- Re-run the application using the **Run Program** button
+- Alternatively, clone the repository and run it locally for a more stable experience
+
