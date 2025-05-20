@@ -1,6 +1,6 @@
 # Terminal Tetris
 
-![Terminal Tetris Screenshot](documentation/terminal_tetris_screenshot.png)
+![Terminal Tetris Screenshot](documentation/tetris_compatibility.png)
 
 *A link to [play Terminal Tetris on Heroku](https://tetris-kh-c29675af7f73.herokuapp.com/)*
 
@@ -226,6 +226,8 @@ Overall, the architecture supports a clean development workflow, real-time termi
 - `random`: Used for selecting random Tetromino shapes and colors.
 - `time`: Used to control game speed and frame timing.
 - `os`: Used to detect the platform (Heroku vs. local) and adjust rendering accordingly.
+- `copy` — to create deep copies of the board for safe rendering without mutating the game state.
+- `sys` — to cleanly exit the program when the user chooses to quit.
 
 #### Third-Party Libraries
 
@@ -238,8 +240,7 @@ Overall, the architecture supports a clean development workflow, real-time termi
 ### Tools
 
 - [VS Code](https://code.visualstudio.com/): Used for writing, testing, and organizing code.
-- [Git](https://git-scm.com/): Used for version control throughout development.
-- [GitHub](https://github.com/): Hosted the project repository and deployment pipeline.
+- [GitHub](https://github.com/): Hosted the project repository and deployment pipeline. Used for version control.
 
 ### Deployment
 
