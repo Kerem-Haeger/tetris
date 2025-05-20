@@ -4,7 +4,7 @@ Return back to the [README.md](README.md) file.
 
 ## Testing Overview
 
-The Terminal Tetris game was tested continuously throughout development, both manually and with help from external users. These tests focused on functionality, visual consistency in the terminal, game logic, and user experience. Special care was taken to ensure compatibility across platforms — especially between local terminals and Heroku’s hosted terminal emulator.
+The Terminal Tetris game was tested continuously throughout development, both manually and with help from external users. These tests focused on gameplay functionality, terminal compatibility, user input, scoring, and leaderboard submission. Special care was taken to ensure visual consistency across platforms — especially between local terminals and Heroku’s hosted terminal emulator.
 
 ---
 
@@ -12,81 +12,74 @@ The Terminal Tetris game was tested continuously throughout development, both ma
 
 ### Core Gameplay
 
-- Game starts with welcome screen.
-- All controls function as expected:
+- Game starts with a welcome screen and waits for user input.
+- All controls work as expected:
   - Arrow keys move and rotate tetrominoes.
-  - Q quits the game gracefully.
-  - Down arrow soft-drops a piece.
-- Pieces lock when reaching the bottom or landing on another block.
-- Lines clear correctly when a full row is filled.
-- Game over screen triggers only once.
-- Restart, submit score, and quit options work as expected.
+  - `Q` quits the game cleanly at any time.
+  - Down arrow triggers soft drop (faster fall).
+- Tetrominoes lock when reaching the bottom or landing on another block.
+- Full rows are detected and cleared correctly, with animated wiping effect.
+- Score increments as expected (10 per piece placed, 100 per line cleared).
+- Level progression triggers every 5 cleared lines, increasing speed.
+- Game over triggers only once, even under simultaneous conditions.
+- Users can choose to restart, quit, view the leaderboard, or submit their score.
 
 ### Visual & UX Testing
 
-- Emoji blocks display correctly on local terminals.
-- Fallback block characters render on Heroku (via `os.name` check).
-- Score updates live and is always visible.
-- Input for leaderboard is centered and accepts max 10 characters.
-- Warning for character limit appears if exceeded.
+- Emoji blocks render correctly in local terminals.
+- On Heroku, block characters fall back to `▓▓` style with color markup using `rich`.
+- Score and side panels update live.
+- Leaderboard input is limited to 10 characters.
+- A clear validation warning appears when name length is exceeded.
+- Controls panel is always visible for easy reference.
 
 ---
 
 ## Peer/User Testing
 
-Several peers were asked to test the game on both Windows and macOS terminals as well as in Heroku. Key feedback included:
+The game was tested by several peers on the following platforms:
 
-- Clear controls and intuitive UI.
-- Enjoyable gameplay and responsive keys.
-- No major bugs during testing.
-- Emoji fallback worked as intended.
+- **Windows 10 / 11** (PowerShell and Command Prompt)
+- **macOS Terminal**
+- **Heroku terminal emulator**
+
+### Feedback Summary
+
+- Users found controls intuitive and responsive.
+- Emoji fallback worked as expected on Heroku.
+- Restart and quit options were praised for being quick and accessible.
+- The leaderboard feature was smooth and felt rewarding.
+- No major bugs were encountered during external testing.
 
 ---
 
 ## Validators
 
-The project’s Python code was checked using [PEP8 Online](http://pep8online.com/) to ensure full PEP 8 compliance. Each file was copy-pasted manually into the validator, and no critical issues were found.
+All source code was checked using [PEP8 Online Validator](https://pep8ci.herokuapp.com/) to ensure full compliance with PEP 8 guidelines.
+
+Each module was copy-pasted manually into the validator. No errors were found in any file.
+
+Screenshots were taken to demonstrate both the successful validation **and** the presence of the required blank line at the end of each file (to address potential false warnings about missing EOF newlines).
 
 ### Validation Results
 
 - **run.py**  
-  ![Python Validator](documentation/pep8_validator/validator_run_file.png)
+  ![Validator Screenshot](documentation/pep8_validator/validator_run_file.png)
 
 - **game_logic.py**  
-  ![Python Validator](documentation/pep8_validator/validator_game_logic_file.png)
+  ![Validator Screenshot](documentation/pep8_validator/validator_game_logic_file.png)
 
-- **tetromino.py**  
-  ![Python Validator](documentation/pep8_validator/validator_tetromino_file.png)
+- **piece.py**  
+  ![Validator Screenshot](documentation/pep8_validator/validator_piece_file.png)
 
-- **leaderboard.py**  
-  ![Python Validator](documentation/pep8_validator/validator_leaderboard_file.png)
+- **board.py**  
+  ![Validator Screenshot](documentation/pep8_validator/validator_board_file.png)
 
-- **input_handler.py**  
-  ![Python Validator](documentation/pep8_validator/validator_input_handler_file.png)
+- **user_interface.py**  
+  ![Validator Screenshot](documentation/pep8_validator/validator_user_interface_file.png)
 
-- **utils.py**  
-  ![Python Validator](documentation/pep8_validator/validator_utils_file.png)
+- **highscores.py**  
+  ![Validator Screenshot](documentation/pep8_validator/validator_highscores_file.png)
 
----
-
-## End-of-File Line Warnings
-
-PEP8 validator sometimes showed “missing newline at end of file” even when GitHub confirmed the file ended correctly. Screenshots below confirm those files are compliant:
-
-- **run.py**  
-  ![EOF Line](documentation/pep8_validator/run_line_at_the_end.png)
-
-- **game_logic.py**  
-  ![EOF Line](documentation/pep8_validator/game_logic_line_at_the_end.png)
-
-- **tetromino.py**  
-  ![EOF Line](documentation/pep8_validator/tetromino_line_at_the_end.png)
-
-- **leaderboard.py**  
-  ![EOF Line](documentation/pep8_validator/leaderboard_line_at_the_end.png)
-
-- **input_handler.py**  
-  ![EOF Line](documentation/pep8_validator/input_handler_line_at_the_end.png)
-
-- **utils.py**  
-  ![EOF Line](documentation/pep8_validator/utils_line_at_the_end.png)
+- **constants.py**  
+  ![Validator Screenshot](documentation/pep8_validator/validator_constants_file.png)
