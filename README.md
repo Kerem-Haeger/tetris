@@ -13,7 +13,7 @@ Despite the absence of a graphical window, the game remains engaging, responsive
 ## How to Play
 
 1. Click this [link to Terminal Tetris](https://tetris-kh-c29675af7f73.herokuapp.com/) or paste it into your browser.
-2. Click **“Run Program”** to start the game in the terminal.
+2. The game should start by itself, if not, click **“Run Program”** to start the game in the terminal.
 3. Press **Enter** to begin.
 4. Use the following controls to play:
 
@@ -23,11 +23,12 @@ Despite the absence of a graphical window, the game remains engaging, responsive
    - **↑** Rotate
    - **Q** Quit the Game
    - **R** Restart the Game
-   - **Enter** Submit Score (after game over, as well as various other functionalities)
+   - **L** View leaderboard (when prompted)
+   - **Enter** Submit Score (after game over, as well as various other functionalities, all prompted and explained)
 
 5. As blocks fall, try to fill horizontal lines to clear them and earn points.
 6. The game ends when the board is full and new pieces can’t spawn.
-7. After the game, you’ll be prompted to enter a name for the leaderboard (max 10 characters).
+7. After the game, you’ll be prompted to enter a name for the leaderboard (max 10 characters). This is voluntary!
 8. You can restart the game, quit, or save your score, as well as view the leaderboard!
 
 ## User Stories
@@ -71,6 +72,7 @@ Despite the absence of a graphical window, the game remains engaging, responsive
 *Game interface viewed through Heroku*
 
 ![Game Interface in Terminal](documentation/features/game_terminal.png)
+
 *Game interface viewed through Terminal*  
 
 ---
@@ -86,7 +88,7 @@ Despite the absence of a graphical window, the game remains engaging, responsive
 ### Tetromino Preview
 
 - The next tetromino is previewed next to the game board to help players plan ahead.
-- Each shape has its own color, making them easier to distinguish.
+- Each shape is randomly paired with a colour, to keep the game engaging and playful.
 
 ---
 
