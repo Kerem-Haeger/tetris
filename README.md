@@ -67,13 +67,9 @@ Despite the absence of a graphical window, the game remains engaging, responsive
   - **If running on Heroku**, it falls back to alternative block characters (e.g., `▓`) to ensure full compatibility.
 - Tetrominoes fall from the top of the board and can be moved or rotated using the arrow keys.
 - Real-time rendering is handled with `blessed`, keeping the experience smooth and responsive.
-
 ![Game Interface on Heroku](documentation/features/game_heroku.png)
-
 *Game interface viewed through Heroku*
-
 ![Game Interface in Terminal](documentation/features/game_terminal.png)
-
 *Game interface viewed through Terminal*  
 
 ---
