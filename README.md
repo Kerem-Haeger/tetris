@@ -247,6 +247,15 @@ Overall, the architecture supports a clean development workflow, real-time termi
 - [draw.io](https://draw.io) / [Lucidchart](https://www.lucidchart.com/): Used to create the flowchart included in the README.
 
 
+## Future Features
+
+- **Pause & Resume**: Add the ability to pause gameplay and resume mid-session.
+- **Custom Key Bindings**: Let users remap controls to suit their preferences.
+- **Ending**: Tetris famously includes an "End", but this version goes on without a set endpoint.
+- **Position in Leaderboard**: When the game is over, the user is shown where they rank in all scores.
+- **Animated Title Screen**: Make the welcome screen more dynamic using Rich's animation features.
+
+
 ## Bugs
 
 ### Solved Bugs
