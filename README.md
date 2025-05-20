@@ -311,37 +311,58 @@ Please refer to the [TESTING.md](TESTING.md) file for detailed testing and valid
 
 ## Deployment
 
-### Live Deployment (Heroku)
+The game is deployed to Heroku and can be accessed here:  
+[Terminal Tetris on Heroku](https://tetris-kh-c29675af7f73.herokuapp.com)
 
-Terminal Tetris is deployed using [Heroku](https://heroku.com/) with the Code Institute Python template.
+This project was deployed using GitHub integration in Heroku and follows the standard terminal-based deployment template provided by Code Institute.
 
-You can play the game here:  
-[https://tetris-kh-c29675af7f73.herokuapp.com/](https://tetris-kh-c29675af7f73.herokuapp.com/)
+---
 
-### Steps to Deploy on Heroku
+### How to Deploy on Heroku
 
-1. Fork or clone the repository from GitHub.
-2. Create a new app on [Heroku Dashboard](https://dashboard.heroku.com/).
-3. In the **Deploy** tab:
-   - Connect your Heroku app to your GitHub repository.
-   - Enable **automatic deploys** or click **"Deploy Branch"** manually.
+> These are the steps used to deploy the project via Heroku using GitHub integration.
 
-4. In the **Settings** tab:
-   - Click **“Reveal Config Vars”** and add the following:
-     - `PORT` → `8000`
-     - `GOOGLE_SHEETS_CREDS` → *Your base64-encoded credentials or a JSON string as required by gspread*
+1. Log in to [Heroku Dashboard](https://dashboard.heroku.com) and create a new app.
 
-5. Still under **Settings**, add the following **buildpacks** in this order:
-   - `heroku/python`
-   - `heroku/nodejs`
+2. Under the **Deploy** tab:
+![Heroku Deployment Tab](documentation/deployment/heroku_deploy.png)
+   - Choose **GitHub** as the deployment method.
+   - Connect your GitHub account and search for your repository.
+   - Click **Connect**.
 
-6. Make sure the following files exist in your repo root:
-   - `run.py`
-   - `requirements.txt`
-   - `Procfile`
-   - `runtime.txt`
+![Heroku Connection](documentation/deployment/heroku_connect.png)
 
-7. Once deployed, click **"Open App"** to launch the terminal interface in your browser.
+3. Under the **Settings** tab:
+![Heroku Settings](documentation/deployment/heroku_settings.png)
+
+   - Click **Reveal Config Vars** and add the following:
+
+![Heroku Reveal](documentation/deployment/heroku_reveal_config_vars.png)
+
+| Key     | Value                                                               |
+|---------|---------------------------------------------------------------------|
+| `PORT`  | `8000`                                                              |
+| `CREDS` | Paste the entire contents of your `creds.json` file as a single line|
+
+
+> ⚠️ **Security Note:** Never commit your `creds.json` file to GitHub. The contents must be stored as an environment variable. If leaked, Google may revoke the credentials.
+
+![Heroku Config Vars](documentation/deployment/heroku_config_vars.png)
+
+4. Add the required **Buildpacks** in this order:
+   1. **Python**
+   2. **Node.js**
+
+![Heroku Buildpacks](documentation/deployment/heroku_buildpacks.png)
+
+5. Return to the **Deploy** tab:
+   - Select your main branch.
+   - Click **Enable Automatic Deploys** (optional).
+   - Click **Deploy Branch** to trigger the build.
+
+![Heroku Deployment](documentation/deployment/heroku_deploy_manual_automatic.png)
+
+6. Once deployment is successful, click **Open App** to launch the game in the browser.
 
 ---
 
@@ -355,8 +376,8 @@ To run Terminal Tetris locally:
 
 2. Clone the repository:
     ```bash
-    git clone https://github.com/your-username/terminal-tetris.git
-    cd terminal-tetris
+    git clone https://github.com/keremhaeger/tetris.git
+    cd tetris
 
 3. (Optional) Create and activate a virtual environment:
     ```bash
@@ -374,6 +395,15 @@ To run Terminal Tetris locally:
 6. Run the game:
     ```bash
     python run.py
+
+> ⚠️ This project uses both the **Google Sheets API** and the **Google Cloud API** to support leaderboard functionality.  
+> To enable this feature when deploying the project yourself, you must:
+>
+> - Create your own Google Sheet to store scores
+> - Set up a Google project via [Google Cloud Console](https://console.cloud.google.com/)
+> - Enable the **Google Sheets API** and **Google Drive API** for that project
+> - Create a **Service Account** and download the `creds.json` file
+> - Share your Google Sheet with the generated service account email (e.g. `your-service-account@your-project.iam.gserviceaccount.com`)
 
 
 ## Credits
