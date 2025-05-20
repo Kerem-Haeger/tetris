@@ -33,7 +33,7 @@ def get_high_scores(limit=10, two_columns=False):
     top_scores = sorted_scores[:limit]
 
     if not two_columns:
-        lines = ["[bold underline]HIGH SCORES[/bold underline]\n"]
+        lines = [""]
         for i, entry in enumerate(top_scores, 1):
             name = entry.get("Name", "Anon")
             score = entry.get("Score", 0)
@@ -45,7 +45,7 @@ def get_high_scores(limit=10, two_columns=False):
     column_1 = top_scores[:limit // 2]
     column_2 = top_scores[limit // 2:]
 
-    lines = ["[bold underline]HIGH SCORES[/bold underline]\n"]
+    lines = [""]
     for i in range(len(column_1)):
         left = column_1[i]
         right = column_2[i] if i < len(column_2) else {"Name": "", "Score": ""}
