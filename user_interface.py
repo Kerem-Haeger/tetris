@@ -16,6 +16,9 @@ def show_welcome_screen():
 Welcome to Tetris!
 [/bold magenta]
 
+[bold white]Tip:[/bold white] You earn 10 points for each piece placed,
+and 100 for every row cleared.
+
 [bold white]Controls:[/bold white]
 [cyan]←[/cyan] Move Left
 [cyan]→[/cyan] Move Right
