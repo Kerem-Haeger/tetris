@@ -97,9 +97,13 @@ Despite the absence of a graphical window, the game remains engaging, responsive
 - When the game ends, players are prompted to enter a name (max 10 characters).
 - Input is handled using `prompt_toolkit` for clean, styled input.
 - Players can skip this step or save their score to a leaderboard.
+
 ![Leaderboard Prompt](documentation/features/enter_name.png)
+
 *The user is prompted to enter a name, if skipped ,"Player" is the default name*
+
 ![Leaderboard Prompt Warning](documentation/features/warning_enter_name.png)
+
 *Should the name be longer than 10 characters, a warning shows, and the user is prevented from pressing Enter*
 
 - The player can choose to view the leaderboard, which will display the 20 highest scores currently recorded.
@@ -116,9 +120,13 @@ Despite the absence of a graphical window, the game remains engaging, responsive
   - Quit the application
   - View the leaderboard
 - The game handles invalid input and gently guides the user to make a selection.
+
 ![Game Over Menu](documentation/features/game_over_before.png)
+
 *Just after the game ends, the user can choose to enter a username*
+
 ![Game Over Menu After](documentation/features/game_over_after.png)
+
 *If a username is entered, the user is presented with the remaining options*
 
 
