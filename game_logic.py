@@ -151,21 +151,24 @@ def post_game_prompt(score):
     """
     leaderboard_visible = False
 
+    previous_state = None
+
     while True:
-        console.clear()
-        if leaderboard_visible:
-            high_scores_text = get_high_scores(limit=20, two_columns=True)
-            console.print(Panel(
-                high_scores_text,
-                title="LEADERBOARD",
-                border_style="blue",
-                width=50,
-                expand=False
-            ), justify="center")
-            console.print("\nPress [bold cyan]L[/bold cyan] to return.", justify="center")
-        else:
-            console.print(Panel(
-                f"""
+        if leaderboard_visible != previous_state:
+            console.clear()
+            if leaderboard_visible:
+                high_scores_text = get_high_scores(limit=20, two_columns=True)
+                console.print(Panel(
+                    high_scores_text,
+                    title="LEADERBOARD",
+                    border_style="blue",
+                    width=50,
+                    expand=False
+                ), justify="center")
+                console.print("\nPress [bold cyan]L[/bold cyan] to return.", justify="center")
+            else:
+                console.print(Panel(
+                    f"""
 [bold]Score:[/bold] {score}
 
 Would you like to record your score?
@@ -173,12 +176,13 @@ Would you like to record your score?
 Press [bold cyan]Enter[/bold cyan] to save your score to the leaderboard,
 [green]R[/green] to restart, [magenta]Q[/magenta] to quit,
 or [blue]L[/blue] to view leaderboard.
-                """,
-                title="GAME OVER",
-                border_style="red",
-                width=50,
-                expand=False
-            ), justify="center")
+                    """,
+                    title="GAME OVER",
+                    border_style="red",
+                    width=50,
+                    expand=False
+                ), justify="center")
+            previous_state = leaderboard_visible
 
         with term.cbreak():
             key = term.inkey(timeout=0.5)

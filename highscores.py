@@ -14,35 +14,40 @@ SHEET = GSPREAD_CLIENT.open("leaderboard")
 SCORES_SHEET = SHEET.worksheet("scores")
 
 
-def get_high_scores(limit=10):
+def get_high_scores(limit=10, two_columns=False):
     """
     Fetches and returns the top high scores from the sheet,
-    sorted in descending order by score. Returned as a single string
-    formatted for use in a Rich Panel.
+    sorted in descending order by score.
+    If two_columns=True, returns the entries formatted in two columns.
     """
-    try:
-        records = SCORES_SHEET.get_all_records()
-    except Exception as e:
-        return f"[red]Failed to load high scores: {e}[/red]"
-
+    records = SCORES_SHEET.get_all_records()
     sorted_scores = sorted(
         records,
-        key=lambda r: (
-            int(r.get("Score", 0))
-            if str(r.get("Score", "")).isdigit()
-            else 0
-        ),
+        key=lambda r: int(r.get("Score", 0)) if str(r.get("Score", "")).isdigit() else 0,
         reverse=True
     )
     top_scores = sorted_scores[:limit]
 
-    lines = [""]
-    for i, entry in enumerate(top_scores, 1):
-        name = entry.get("Name", "Anon")
-        score = entry.get("Score", 0)
-        lines.append(f"{i}. {name:<10} {score}")
-        lines.append("")  # blank line for spacing
+    if not two_columns:
+        lines = ["[bold underline]HIGH SCORES[/bold underline]\n"]
+        for i, entry in enumerate(top_scores, 1):
+            name = entry.get("Name", "Anon")
+            score = entry.get("Score", 0)
+            lines.append(f"{i}. {name:<10} {score}")
+            lines.append("")
+        return "\n".join(lines)
 
+    # Format for two columns (limit should be even)
+    column_1 = top_scores[:limit // 2]
+    column_2 = top_scores[limit // 2:]
+
+    lines = ["[bold underline]HIGH SCORES[/bold underline]\n"]
+    for i in range(len(column_1)):
+        left = column_1[i]
+        right = column_2[i] if i < len(column_2) else {"Name": "", "Score": ""}
+        left_text = f"{i+1}. {left.get('Name', 'Anon'):<10} {left.get('Score', 0)}"
+        right_text = f"{i+1+limit//2}. {right.get('Name', 'Anon'):<10} {right.get('Score', 0)}"
+        lines.append(f"{left_text:<25} {right_text}")
     return "\n".join(lines)
 
 
