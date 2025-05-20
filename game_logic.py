@@ -1,5 +1,8 @@
 import time
 import sys
+from prompt_toolkit import prompt
+from prompt_toolkit.validation import Validator, ValidationError
+from prompt_toolkit.document import Document
 from rich.live import Live
 from rich.layout import Layout
 from rich.panel import Panel
@@ -17,6 +20,15 @@ from user_interface import (
 )
 from highscores import get_high_scores, submit_score
 from constants import VALID_KEYS
+
+
+class MaxLengthValidator(Validator):
+    def validate(self, document: Document):
+        if len(document.text) > 10:
+            raise ValidationError(
+                message="Maximum 10 characters allowed.",
+                cursor_position=10
+            )
 
 
 def handle_post_game_input():
@@ -213,11 +225,16 @@ def handle_score_submission(score):
 [bold cyan]Enter a username for the leaderboard:[/bold cyan]
 (max 10 characters, or press [cyan]Enter[/cyan] to skip)
     """, justify="center")
-    name = console.input("> ").strip()
+
+    name = prompt(
+                "> ",
+                validator=MaxLengthValidator(),
+                validate_while_typing=True
+                ).strip()
+
     if not name:
         name = "Player"
-    else:
-        name = name[:10]
+
     submit_score(name, score)
 
     leaderboard_visible = False
