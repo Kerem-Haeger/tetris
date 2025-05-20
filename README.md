@@ -97,6 +97,7 @@ Despite the absence of a graphical window, the game remains engaging, responsive
 - When the game ends, players are prompted to enter a name (max 10 characters).
 - Input is handled using `prompt_toolkit` for clean, styled input.
 - Players can skip this step or save their score to a leaderboard.
+- To stay true to the original game, any character is allowed, as long as there are less than 10.
 
 ![Leaderboard Prompt](documentation/features/enter_name.png)
 
