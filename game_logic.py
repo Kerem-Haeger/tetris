@@ -23,6 +23,10 @@ from constants import VALID_KEYS
 
 
 class MaxLengthValidator(Validator):
+    """
+    Validator to ensure the input length does
+    not exceed 10 characters.
+    """
     def validate(self, document: Document):
         if len(document.text) > 10:
             raise ValidationError(
