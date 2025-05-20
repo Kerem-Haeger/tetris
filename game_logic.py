@@ -55,6 +55,11 @@ def handle_post_game_input():
 
 
 def run_game_loop():
+    """
+    Main game loop that handles Tetris gameplay, user input, rendering,
+    score tracking, level progression, and game over behavior.
+    Returns the final score and whether the user requested to quit.
+    """
     board = create_board()
     score = 0
     level = 1
